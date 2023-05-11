@@ -1,0 +1,7 @@
+<h1>Exercises for {{ user.username }}</h1>
+
+{% for submission in submissions %}
+    <h2>{{ submission.exercise.title }}</h2>
+    <p>{{ submission.answer_text }}</p>
+    <hr/>
+{% endfor %}

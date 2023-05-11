@@ -1,0 +1,12 @@
+<!-- test_list.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+{% for test in tests %}
+  <h2><a href="{% url 'exercise_list' test.id %}">{{ test.name }}</a></h2>
+  <div>{{ test.description|safe }}</div>
+{% empty %}
+  <p>Non ci sono test attivi.</p>
+{% endfor %}
+{% endblock %}
