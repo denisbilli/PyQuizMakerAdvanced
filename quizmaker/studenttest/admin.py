@@ -1,13 +1,13 @@
 # myapp/admin.py
 
+from django.urls import path
 from django.contrib import admin
+from django.utils.html import format_html
+from django.urls import reverse
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
+from django.shortcuts import get_object_or_404
 from .models import *
-
-from django.contrib.auth.models import User
-from django.http import FileResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-from io import BytesIO
 
 from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -24,6 +24,7 @@ class ChoiceInline(admin.TabularInline):
     extra = 3
 
 
+@admin.register(Exercise)
 class ExerciseAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
     list_display = ('title', 'test', 'type')
@@ -31,30 +32,55 @@ class ExerciseAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
+@admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_graded', 'due_date')
+    list_display = ('name', 'description', 'enabled', 'is_graded', 'due_date', 'users_per_test')
     list_filter = ['is_graded']
-    search_fields = ['name']
+    search_fields = ['name', 'description']
     inlines = [ExerciseInline]  # Add the inline to the admin
 
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<int:pk>/users/',
+                self.admin_site.admin_view(UsersPerTestView.as_view()),
+                name='users_per_test',
+            ),
+        ]
+        return custom_urls + urls
 
+    def users_per_test(self, obj):
+        url = reverse("admin:users_per_test", args=[obj.id])
+        return format_html(f'<a href="{url}">Users per Test</a>')
+    users_per_test.short_description = 'Users per Test'
+
+
+@admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('user', 'exercise', 'answer_text', 'answer_choice')
     list_filter = ['user', 'exercise']
     search_fields = ['user__username', 'exercise__title']
 
 
+@method_decorator(staff_member_required, name='dispatch')
 class UsersPerTestView(PermissionRequiredMixin, DetailView):
     model = Test
-    template_name = "admin/your_app_name/users_per_test.html"  # replace "your_app_name" with your app name
-    permission_required = "your_app_name.view_test"  # replace "your_app_name" with your app name
+    template_name = "admin/studenttest/users_per_test.html"  # replace "your_app_name" with your app name
+    permission_required = "studenttest.view_test"  # replace "your_app_name" with your app name
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['users'] = User.objects.filter(submission__exercise__test=self.object).distinct()
+        test = context['object']
+
+        users_with_submissions = User.objects.filter(submission__exercise__test=test).distinct()
+        user_submissions = {user: user.submission_set.filter(exercise__test=test) for user in users_with_submissions}
+
+        context.update({
+            **admin.site.each_context(self.request),
+            'opts': self.model._meta,
+            'user_submissions': user_submissions,
+        })
+
         return context
 
-
-admin.site.register(Test, TestAdmin)
-admin.site.register(Exercise, ExerciseAdmin)
-admin.site.register(Submission, SubmissionAdmin)
