@@ -17,7 +17,7 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ciao, {{ user.username }}</a>
+                        <a class="nav-link" href="#">Ciao, {{ user.first_name }} {{ user.last_name }}</a>
                     </li>
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}">
@@ -27,7 +27,7 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register/Login</a>
+                        <a class="nav-link" href="{% url 'register' %}">Registrazione/Login</a>
                     </li>
                 {% endif %}
             </ul>
