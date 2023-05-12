@@ -40,7 +40,19 @@ class RegistrationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.username = f"{self.cleaned_data['first_name']} {self.cleaned_data['last_name']}"
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        username_base = f"{first_name[0].lower()}{last_name.lower()}"
+        username = username_base
+
+        # Check if the username already exists and if so, add a number to the end
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{username_base}{counter}"
+            counter += 1
+
+        user.username = username
+
         if commit:
             user.save()
         return user
