@@ -19,11 +19,11 @@
                 {% csrf_token %}
                 {% if exercise.type == 'O' %}
                     <div class="form-group">
-                      <textarea class="form-control" name="answer_text" rows="5">{% if submission %}{{ submission.answer_text }}{% endif %}</textarea>
+                      <textarea class="form-control" name="answer_text" rows="5">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
                     </div>
                 {% elif exercise.type == 'M' %}
                     {% for choice in exercise.choices.all %}
-                      <div class="form-check">
+                      <div class="form-check {% if choice.is_correct %}correct{% endif %}">
                         <input class="form-check-input" type="radio" name="answer_choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" {% if submission and submission.answer_choice.id == choice.id %}checked{% endif %}>
                         <label class="form-check-label" for="choice{{ forloop.counter }}">
                           {{ choice.text }}
@@ -39,11 +39,14 @@ int main() {
     return 0;
 }</code>
 </pre>
-                    <button type="button" onclick="pasteCode()" class="btn btn-primary">Incolla il tuo codice</button>
-                    <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% endif %}">
+                <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
                 {% endif %}
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
-                    <button type="submit" class="btn btn-primary">Invia Risposta</button>
+                    {% if not exercise.test.is_graded %}
+                        <button type="button" onclick="showSolution()" class="btn btn-info" id="btnShowSolution">Mostra soluzione</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary" id="btnSendAnswer">Invia Risposta</button>
+                    {% endif %}
                     <button type="button" onclick="location.href='{% url 'exercise_list' exercise.test.id %}'" class="btn btn-secondary">Indietro</button>
                 </div>
             </form>
@@ -84,6 +87,8 @@ div.form-check {
 }
 </style>
 <script>
+    var is_graded = "{{ exercise.test.is_graded|escapejs }}" == 'False' ? false : true;
+
     function highlightCode() {
         Prism.highlightAll();
     }
@@ -100,10 +105,24 @@ div.form-check {
         });
     }
 
+    function showSolution() {
+        const codeElement = document.querySelector('.language-cpp');
+        const hiddenInput = document.querySelector('#answer_text');
+
+        const wrongChoices = $('.form-check');
+        wrongChoices.css('color', 'red');
+
+        const correctChoice = $('.form-check.correct');
+        correctChoice.css('color', 'green');
+
+        html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
+        codeElement.innerHTML = html_text;
+    }
+
     $(document).ready(function() {
         const codeElement = document.querySelector('.language-cpp');
         const hiddenInput = document.querySelector('#answer_text');
-        if(hiddenInput.value != "") {
+        if(hiddenInput.value != "" && is_graded) {
             html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
             codeElement.innerHTML = html_text;
         } else {

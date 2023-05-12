@@ -18,6 +18,7 @@ from django.utils.text import slugify
 from datetime import datetime
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph, Spacer, Preformatted
+import copy
 
 
 @login_required
@@ -79,6 +80,15 @@ def submit_exercise(request, exercise_id):  # Change parameter to exercise_id
         form = SubmissionForm(instance=submission)
 
     return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission})
+
+
+@login_required
+def duplicate_exercise(request, exercise_id):
+    exercise = get_object_or_404(Exercise, pk=exercise_id)
+    new_exercise = copy.deepcopy(exercise)
+    new_exercise.pk = None
+    new_exercise.save()
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -157,6 +167,7 @@ class UserTestReportView(View):
         response = FileResponse(buffer, as_attachment=True, filename=filename)
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
 
 
 def register(request):

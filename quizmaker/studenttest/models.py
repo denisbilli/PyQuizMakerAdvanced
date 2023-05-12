@@ -15,9 +15,9 @@ class Test(models.Model):
 
 class Exercise(models.Model):
     TYPE_CHOICES = [
-        ('O', 'Open question'),
-        ('M', 'Multiple choice question'),
-        ('C', 'Coding question'),
+        ('O', 'Domanda aperta'),
+        ('M', 'Scelta multipla'),
+        ('C', 'Codice'),
     ]
 
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='exercises')
@@ -25,6 +25,7 @@ class Exercise(models.Model):
     description = models.TextField()
     score = models.PositiveIntegerField(null=True, blank=True)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, blank=True, null=True)
+    expected_answer = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.title

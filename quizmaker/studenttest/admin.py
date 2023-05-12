@@ -27,9 +27,14 @@ class ChoiceInline(admin.TabularInline):
 @admin.register(Exercise)
 class ExerciseAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
-    list_display = ('title', 'test', 'type')
+    list_display = ('title', 'test', 'type', 'duplicate_link')
     list_filter = ['test', 'type']
     search_fields = ['title']
+
+    def duplicate_link(self, obj):
+        return format_html('<a href="{}">Duplicate</a>', reverse('duplicate_exercise', args=[obj.pk]))
+
+    duplicate_link.short_description = 'Duplicate Exercise'
 
 
 @admin.register(Test)
