@@ -19,17 +19,23 @@ from datetime import datetime
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph, Spacer, Preformatted
 import copy
+from django.utils import timezone
 
 
 @login_required
 def test_list(request):
-    tests = Test.objects.filter(enabled=True)
+    now = timezone.now()
+    tests = Test.objects.filter(enabled=True, is_graded=False)
+    tests = tests | Test.objects.filter(enabled=True, is_graded=True, due_date__gte=now)
     return render(request, 'test_list.html', {'tests': tests})
 
 
 @login_required
 def exercise_list(request, test_id):
+    now = timezone.now()
     test = get_object_or_404(Test, id=test_id)
+    if test.is_graded and test.due_date < now:
+        return redirect('test_list')
     exercises = Exercise.objects.filter(test=test)
     completed_exercises = Submission.objects.filter(user=request.user, exercise__in=exercises).values_list('exercise', flat=True)
 
@@ -57,7 +63,8 @@ def submit_test(request, test_id):
 
 
 @login_required
-def submit_exercise(request, exercise_id):  # Change parameter to exercise_id
+def submit_exercise(request, exercise_id):
+    now = timezone.now()
     exercise = get_object_or_404(Exercise, id=exercise_id)
     test = exercise.test  # Get the related test
 
@@ -68,15 +75,22 @@ def submit_exercise(request, exercise_id):  # Change parameter to exercise_id
         submission = None
 
     if request.method == 'POST':
-        form = SubmissionForm(request.POST, request.FILES, instance=submission)
-        if form.is_valid():
-            if test.is_graded and test.due_date < timezone.now():
-                return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
-            form.user = request.user
-            form.exercise = exercise
-            form.save(commit=True)
+        if not test.is_graded:
+            exercise.signed = not exercise.signed
+            exercise.save()
             return redirect('exercise_list', test_id=exercise.test.id)
+        else:
+            form = SubmissionForm(request.POST, request.FILES, instance=submission)
+            if form.is_valid():
+                if test.is_graded and test.due_date < timezone.now():
+                    return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
+                form.user = request.user
+                form.exercise = exercise
+                form.save(commit=True)
+                return redirect('exercise_list', test_id=exercise.test.id)
     else:
+        if test.is_graded and test.due_date < now:
+            return redirect('test_list')
         form = SubmissionForm(instance=submission)
 
     return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission})
@@ -167,7 +181,6 @@ class UserTestReportView(View):
         response = FileResponse(buffer, as_attachment=True, filename=filename)
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
-
 
 
 def register(request):

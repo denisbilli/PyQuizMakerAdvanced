@@ -26,6 +26,7 @@ class Exercise(models.Model):
     score = models.PositiveIntegerField(null=True, blank=True)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, blank=True, null=True)
     expected_answer = models.TextField(null=True, blank=True)
+    signed = models.BooleanField(null=True, blank=True)
 
     def __str__(self):
         return self.title

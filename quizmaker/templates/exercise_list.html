@@ -3,16 +3,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>{{ test.name }}</h2>
-  <div class="row">
+  <div class="d-flex justify-content-between">
+    <h2>{{ test.name }}</h2>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Filtro per tipo di esercizio
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item exercise-filter" href="#" data-filter="all">All</a>
+        <a class="dropdown-item exercise-filter" href="#" data-filter="O">Domande aperte</a>
+        <a class="dropdown-item exercise-filter" href="#" data-filter="M">A risposta multipla</a>
+        <a class="dropdown-item exercise-filter" href="#" data-filter="C">Codice</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="exercise-cards">
     {% for exercise in exercises %}
-      <div class="col-sm-4 mb-4">
+      <div class="col-sm-4 mb-4 exercise-card mix" data-type="{{ exercise.type }}">
         <div class="card h-100">
           <div class="card-body d-flex flex-column align-items-center justify-content-center">
             <h5 class="card-title text-center">
               <a href="{% url 'submit_exercise' exercise.id %}">{{ exercise.title }}</a>
               {% if exercise.id in completed_exercises %}
                 <i class="fas fa-check"></i>
+              {% elif exercise.signed %}
+                <i class="fas fa-flag"></i>
               {% endif %}
             </h5>
             <p class="card-text"><small class="text-muted">{{ exercise.get_type_display }}</small></p>
@@ -28,3 +44,32 @@
     <button type="button" onclick="location.href='{% url 'test_list' %}'" class="btn btn-secondary">Indietro</button>
   </div>
 {% endblock %}
+
+{% block custom_css %}
+<script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
+<script>
+$(document).ready(function() {
+  var mixer = mixitup('#exercise-cards', {
+    "animation": {
+        "duration": 250,
+        "nudge": true,
+        "reverseOut": false,
+        "effects": "fade translateZ(-100px)"
+    }
+  });
+  mixer.filter('.exercise-card');
+
+  $(".exercise-filter").click(function(e) {
+      e.preventDefault();
+      var selectedType = $(this).data('filter');
+      console.log(selectedType);
+      if (selectedType == 'all') {
+          mixer.filter('.exercise-card'); // This will show all exercises
+      } else {
+          mixer.filter('.exercise-card[data-type="' + selectedType + '"]'); // This will filter based on the selected type
+      }
+  });
+});
+</script>
+{% endblock %}
+

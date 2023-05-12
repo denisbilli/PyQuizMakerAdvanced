@@ -32,7 +32,7 @@
                     {% endfor %}
                 {% elif exercise.type == 'C' %}
 <pre>
-<code class="language-cpp">#include &#60;iostream&#62;
+<code class="language-cpp" id="answer">#include &#60;iostream&#62;
 
 int main() {
     // Scrivi qui il tuo esercizio
@@ -44,6 +44,11 @@ int main() {
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
                     {% if not exercise.test.is_graded %}
                         <button type="button" onclick="showSolution()" class="btn btn-info" id="btnShowSolution">Mostra soluzione</button>
+                        {% if not exercise.signed %}
+                            <button type="submit" class="btn btn-success" id="btnSignExercise">Contrassegna</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-danger" id="btnSignExercise">Rimuovi contrassegno</button>
+                        {% endif %}
                     {% else %}
                         <button type="submit" class="btn btn-primary" id="btnSendAnswer">Invia Risposta</button>
                     {% endif %}
@@ -94,7 +99,7 @@ div.form-check {
     }
 
     function pasteCode() {
-        const codeElement = document.querySelector('.language-cpp');
+        const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
 
         navigator.clipboard.readText().then((text) => {
@@ -106,7 +111,7 @@ div.form-check {
     }
 
     function showSolution() {
-        const codeElement = document.querySelector('.language-cpp');
+        const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
 
         const wrongChoices = $('.form-check');
@@ -120,7 +125,7 @@ div.form-check {
     }
 
     $(document).ready(function() {
-        const codeElement = document.querySelector('.language-cpp');
+        const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
         if(hiddenInput.value != "" && is_graded) {
             html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');

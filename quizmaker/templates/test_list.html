@@ -3,10 +3,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for test in tests %}
-  <h2><a href="{% url 'exercise_list' test.id %}">{{ test.name }}</a></h2>
-  <div>{{ test.description|safe }}</div>
-{% empty %}
-  <p>Non ci sono test attivi.</p>
-{% endfor %}
+{% if tests %}
+  <table class="table mt-5">
+    <thead>
+      <tr>
+        <th scope="col">Test</th>
+        <th scope="col">Descrizione</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for test in tests %}
+        <tr class="{% if test.is_graded %}table-success{% endif %}">
+          <td class="align-middle">{{ test.name }}</td>
+          <td class="align-middle">{{ test.description|safe }}</td>
+          <td class="align-middle">
+            {% if test.is_graded %}
+              <a class="btn btn-success" href="{% url 'exercise_list' test.id %}">Inizia Test</a>
+            {% else %}
+              <a class="btn btn-primary" href="{% url 'exercise_list' test.id %}">Mostra Esercizi</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="mt-5">Non ci sono test attivi.</p>
+{% endif %}
 {% endblock %}
