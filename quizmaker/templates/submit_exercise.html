@@ -5,7 +5,8 @@
     <div class="row">
         <div class="col">
             <h1>{{ exercise.title }}</h1>
-            <h5>Tipologia: {{ exercise.get_type_display }}</h5>  <!-- Add this line -->
+            <h5>Tipologia: {{ exercise.get_type_display }}</h5>
+            {% if exercise.test.is_graded %}<h3>Punti: {{ exercise.score }}</h3>{% endif %}
         </div>
     </div>
     <div class="row">

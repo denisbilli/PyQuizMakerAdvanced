@@ -32,6 +32,7 @@
                 {% endif %}
             </h5>
             <p class="card-text"><small class="text-muted">{{ exercise.get_type_display }}</small></p>
+            {% if exercise.test.is_graded %}<p class="card-text"><small class="text-muted">Punti: {{ exercise.score }}</small></p>{% endif %}
           </div>
         </div>
       </div>
