@@ -1,0 +1,5 @@
+# Database
+db.sqlite3
+
+# File di configurazione
+settings.py
