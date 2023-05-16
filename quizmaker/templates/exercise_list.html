@@ -25,11 +25,11 @@
           <div class="card-body d-flex flex-column align-items-center justify-content-center">
             <h5 class="card-title text-center">
               <a href="{% url 'submit_exercise' exercise.id %}">{{ exercise.title }}</a>
-              {% if exercise.id in completed_exercises %}
-                <i class="fas fa-check"></i>
-              {% elif exercise.signed %}
-                <i class="fas fa-flag"></i>
-              {% endif %}
+                {% if exercise.id in completed_exercises %}
+                    <i class="fas fa-check"></i>
+                {% elif exercise.id in signed_exercises %}
+                    <i class="fas fa-flag"></i>
+                {% endif %}
             </h5>
             <p class="card-text"><small class="text-muted">{{ exercise.get_type_display }}</small></p>
           </div>

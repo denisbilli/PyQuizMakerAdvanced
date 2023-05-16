@@ -34,15 +34,23 @@ def test_list(request):
 def exercise_list(request, test_id):
     now = timezone.now()
     test = get_object_or_404(Test, id=test_id)
-    if test.is_graded and test.due_date < now:
+    if (test.is_graded and test.due_date < now) or (not test.enabled):
         return redirect('test_list')
+
     exercises = Exercise.objects.filter(test=test)
     completed_exercises = Submission.objects.filter(user=request.user, exercise__in=exercises).values_list('exercise', flat=True)
+
+    # Fetch the UserExercise objects related to the current user and test
+    user_exercises = UserExercise.objects.filter(user=request.user, exercise__test=test)
+
+    # Extract the ids of the signed exercises into a list
+    signed_exercises = [ue.exercise.id for ue in user_exercises if ue.signed]
 
     return render(request, 'exercise_list.html', {
         'test': test,
         'exercises': exercises,
-        'completed_exercises': completed_exercises
+        'completed_exercises': completed_exercises,
+        'signed_exercises': signed_exercises,
     })
 
 
@@ -74,10 +82,12 @@ def submit_exercise(request, exercise_id):
     except Submission.DoesNotExist:
         submission = None
 
+    user_exercise, created = UserExercise.objects.get_or_create(user=request.user, exercise=exercise)
+
     if request.method == 'POST':
         if not test.is_graded:
-            exercise.signed = not exercise.signed
-            exercise.save()
+            user_exercise.signed = not user_exercise.signed
+            user_exercise.save()
             return redirect('exercise_list', test_id=exercise.test.id)
         else:
             form = SubmissionForm(request.POST, request.FILES, instance=submission)
@@ -89,11 +99,12 @@ def submit_exercise(request, exercise_id):
                 form.save(commit=True)
                 return redirect('exercise_list', test_id=exercise.test.id)
     else:
-        if test.is_graded and test.due_date < now:
+        if (test.is_graded and test.due_date < now) or (not test.enabled):
             return redirect('test_list')
         form = SubmissionForm(instance=submission)
 
-    return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission})
+    return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission,
+                                                    'user_exercise': user_exercise})
 
 
 @login_required

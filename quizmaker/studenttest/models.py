@@ -26,10 +26,18 @@ class Exercise(models.Model):
     score = models.PositiveIntegerField(null=True, blank=True)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, blank=True, null=True)
     expected_answer = models.TextField(null=True, blank=True)
-    signed = models.BooleanField(null=True, blank=True)
 
     def __str__(self):
         return self.title
+
+
+class UserExercise(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    signed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = (('user', 'exercise'),)
 
 
 class Choice(models.Model):
