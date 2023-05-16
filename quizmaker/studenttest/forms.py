@@ -2,7 +2,7 @@
 
 from django import forms
 from .models import Submission
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
 
 
@@ -62,3 +62,18 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput)
 
+
+class UpdateProfileForm(UserChangeForm):
+    password = None  # this line will exclude the password field
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+        return user

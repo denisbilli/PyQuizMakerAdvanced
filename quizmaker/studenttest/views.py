@@ -1,25 +1,52 @@
 # views.py
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import *
-from .forms import SubmissionForm, RegistrationForm, LoginForm
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import admin
+import io
+import copy
 
 from django.http import FileResponse
 from django.views import View
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-from django.utils.text import slugify
-from datetime import datetime
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import Paragraph, Spacer, Preformatted
-import copy
 from django.utils import timezone
+from django.utils.text import slugify
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib import messages
+
+# ReportLab
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph, Spacer, Preformatted, SimpleDocTemplate
+
+from .models import *
+from .forms import SubmissionForm, RegistrationForm, LoginForm, UpdateProfileForm, PasswordChangeForm
+
+
+@login_required
+def profile(request):
+    form = UpdateProfileForm(instance=request.user)
+    password_form = PasswordChangeForm(request.user)
+
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+
+        if form_type == 'update_profile':
+            form = UpdateProfileForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your profile was successfully updated!')
+                return redirect('profile')
+
+        elif form_type == 'change_password':
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)  # Update session to avoid logging out
+                messages.success(request, 'Your password was successfully updated!')
+                return redirect('profile')
+
+        else:
+            messages.error(request, 'Something went wrong.')
+
+    return render(request, 'profile.html', {'form': form, 'password_form': password_form})
 
 
 @login_required
