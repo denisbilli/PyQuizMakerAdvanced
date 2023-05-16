@@ -44,7 +44,7 @@ int main() {
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
                     {% if not exercise.test.is_graded %}
                         <button type="button" onclick="showSolution()" class="btn btn-info" id="btnShowSolution">Mostra soluzione</button>
-                        {% if not exercise.signed %}
+                        {% if not user_exercise.signed %}
                             <button type="submit" class="btn btn-success" id="btnSignExercise">Contrassegna</button>
                         {% else %}
                             <button type="submit" class="btn btn-danger" id="btnSignExercise">Rimuovi contrassegno</button>
