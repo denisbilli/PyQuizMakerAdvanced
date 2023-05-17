@@ -5,25 +5,36 @@
 {% block content %}
   <div class="d-flex justify-content-between">
     <h2>{{ test.name }}</h2>
-    {% if test.is_graded %}
-      <h4>Punteggio totale: {{ total_score }}</h4>
-    {% endif %}
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Filtro per tipo di esercizio
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item exercise-filter" href="#" data-filter="all">All</a>
-        <a class="dropdown-item exercise-filter" href="#" data-filter="O">Domande aperte</a>
-        <a class="dropdown-item exercise-filter" href="#" data-filter="M">A risposta multipla</a>
-        <a class="dropdown-item exercise-filter" href="#" data-filter="C">Codice</a>
+    <div class="d-flex justify-content-end align-items-center flex-grow-1">
+      {% if test.is_graded %}
+        <h4 class="mx-auto">Punteggio totale: {{ total_score }}</h4>
+      {% endif %}
+      <div class="dropdown mr-2">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Nessun filtro
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item exercise-filter" href="#" data-filter="all">Nessun filtro</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="O">Domande aperte</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="M">A risposta multipla</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="C">Codice</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSortButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Punteggio più basso
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownSortButton">
+          <a class="dropdown-item sort-filter" href="#" data-sort="score:asc">Punteggio più basso</a>
+          <a class="dropdown-item sort-filter" href="#" data-sort="score:desc">Punteggio più alto</a>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="row" id="exercise-cards">
     {% for exercise in exercises %}
-      <div class="col-sm-4 mb-4 exercise-card mix" data-type="{{ exercise.type }}">
+      <div class="col-sm-4 mb-4 exercise-card mix" data-type="{{ exercise.type }}" {% if exercise.test.is_graded %}data-score="{{ exercise.score }}"{% endif %}>
         <div class="card h-100">
           <div class="card-body d-flex flex-column align-items-center justify-content-center">
             <h5 class="card-title text-center">
@@ -54,6 +65,9 @@
 <script>
 $(document).ready(function() {
   var mixer = mixitup('#exercise-cards', {
+    "load": {
+        "sort": "score:asc"
+    },
     "animation": {
         "duration": 250,
         "nudge": true,
@@ -66,12 +80,22 @@ $(document).ready(function() {
   $(".exercise-filter").click(function(e) {
       e.preventDefault();
       var selectedType = $(this).data('filter');
+      var filterText = $(this).text();
       console.log(selectedType);
       if (selectedType == 'all') {
           mixer.filter('.exercise-card'); // This will show all exercises
       } else {
           mixer.filter('.exercise-card[data-type="' + selectedType + '"]'); // This will filter based on the selected type
       }
+      $('#dropdownMenuButton').text(filterText);
+  });
+
+  $(".sort-filter").click(function(e) {
+      e.preventDefault();
+      var sortValue = $(this).data('sort');
+      var sortText = $(this).text();
+      $('#dropdownSortButton').text(sortText);
+      mixer.sort(sortValue);
   });
 });
 </script>
