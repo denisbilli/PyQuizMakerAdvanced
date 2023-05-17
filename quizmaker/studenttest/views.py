@@ -61,6 +61,7 @@ def test_list(request):
 def exercise_list(request, test_id):
     now = timezone.now()
     test = get_object_or_404(Test, id=test_id)
+    total_score = test.exercises.aggregate(total=Sum('score'))['total'] or 0
     if (test.is_graded and test.due_date < now) or (not test.enabled):
         return redirect('test_list')
 
@@ -78,6 +79,7 @@ def exercise_list(request, test_id):
         'exercises': exercises,
         'completed_exercises': completed_exercises,
         'signed_exercises': signed_exercises,
+        'total_score': total_score
     })
 
 

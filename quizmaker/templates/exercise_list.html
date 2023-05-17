@@ -5,6 +5,9 @@
 {% block content %}
   <div class="d-flex justify-content-between">
     <h2>{{ test.name }}</h2>
+    {% if test.is_graded %}
+      <h4>Punteggio totale: {{ total_score }}</h4>
+    {% endif %}
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Filtro per tipo di esercizio
