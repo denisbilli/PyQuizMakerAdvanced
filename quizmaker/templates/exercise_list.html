@@ -9,7 +9,7 @@
       {% if test.is_graded %}
         <h4 class="mx-auto">Punteggio totale: {{ total_score }}</h4>
       {% endif %}
-      <div class="dropdown mr-2">
+      <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Nessun filtro
         </button>
@@ -20,7 +20,8 @@
           <a class="dropdown-item exercise-filter" href="#" data-filter="C">Codice</a>
         </div>
       </div>
-      <div class="dropdown">
+      {% if test.is_graded %}
+      <div class="dropdown ml-2">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSortButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Punteggio più basso
         </button>
@@ -29,6 +30,7 @@
           <a class="dropdown-item sort-filter" href="#" data-sort="score:desc">Punteggio più alto</a>
         </div>
       </div>
+      {% endif %}
     </div>
   </div>
 
