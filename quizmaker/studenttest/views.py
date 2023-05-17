@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib import messages
+from django.db.models import Sum
 
 # ReportLab
 from reportlab.lib.pagesizes import letter
