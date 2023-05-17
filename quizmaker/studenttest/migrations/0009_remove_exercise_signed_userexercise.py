@@ -13,20 +13,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='exercise',
-            name='signed',
-        ),
-        migrations.CreateModel(
-            name='UserExercise',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('signed', models.BooleanField(default=False)),
-                ('exercise', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='studenttest.exercise')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'unique_together': {('user', 'exercise')},
-            },
-        ),
     ]
