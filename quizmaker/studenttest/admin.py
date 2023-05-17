@@ -89,3 +89,7 @@ class UsersPerTestView(PermissionRequiredMixin, DetailView):
 
         return context
 
+
+@admin.register(UserExercise)
+class UserExerciseAdmin(admin.ModelAdmin):
+    list_display = ('user', 'exercise', 'signed')
