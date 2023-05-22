@@ -70,7 +70,7 @@ def exercise_list(request, test_id):
     if cannot_enter_view:
         return redirect('test_list')
 
-    exercises = Exercise.objects.filter(test=test)
+    exercises = Exercise.objects.filter(test=test, enabled=True)
     completed_exercises = Submission.objects.filter(user=request.user, exercise__in=exercises).values_list('exercise', flat=True)
 
     # Fetch the UserExercise objects related to the current user and test
@@ -148,6 +148,7 @@ def duplicate_exercise(request, exercise_id):
     exercise = get_object_or_404(Exercise, pk=exercise_id)
     new_exercise = copy.deepcopy(exercise)
     new_exercise.pk = None
+    new_exercise.enabled = False
     new_exercise.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
