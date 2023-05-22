@@ -22,7 +22,7 @@
                 {% csrf_token %}
                 {% if exercise.type == 'O' %}
                     <div class="form-group">
-                      <textarea class="form-control" name="answer_text" id="open_answer" rows="5" style="display: none">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
+                      <textarea class="form-control" name="answer_text" rows="5" style="display: none">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
                     </div>
                 {% elif exercise.type == 'M' %}
                     {% for choice in exercise.choices.all %}
