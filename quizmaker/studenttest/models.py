@@ -18,6 +18,7 @@ class Exercise(models.Model):
         ('O', 'Domanda aperta'),
         ('M', 'Scelta multipla'),
         ('C', 'Codice'),
+        ('D', 'Diagramma di flusso'),
     ]
 
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='exercises')

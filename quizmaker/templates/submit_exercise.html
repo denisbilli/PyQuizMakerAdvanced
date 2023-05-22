@@ -41,6 +41,10 @@ int main() {
 }</code>
 </pre>
                 <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
+                {% elif exercise.type == 'D' %}
+                    <div class="form-group">
+                      <textarea class="form-control" name="answer_text" rows="5">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
+                    </div>
                 {% endif %}
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
                     {% if not exercise.test.is_graded %}
@@ -92,6 +96,7 @@ div.form-check {
     align-items: center;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.0.0/mermaid.min.js"></script>
 <script>
     var is_graded = "{{ exercise.test.is_graded|escapejs }}" == 'False' ? false : true;
 
@@ -128,12 +133,18 @@ div.form-check {
     $(document).ready(function() {
         const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
-        if(hiddenInput.value != "" && is_graded) {
+        if(hiddenInput != null && hiddenInput.value != "" && is_graded) {
             html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
             codeElement.innerHTML = html_text;
         } else {
             highlightCode();
         }
+
+        // diagrammi di flusso
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark'
+        });
     });
 </script>
 {% endblock %}
