@@ -4,15 +4,17 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h1>{{ exercise.title }}</h1>
-            <h5>Tipologia: {{ exercise.get_type_display }}</h5>
-            {% if exercise.test.is_graded %}<h3>Punti: {{ exercise.score }}</h3>{% endif %}
+            <h1 class="mb-3 text-primary">{{ exercise.title }}</h1>
+            <h5 class="mb-3 text-muted">Tipologia: {{ exercise.get_type_display }}</h5>
+            {% if exercise.test.is_graded %}
+                <h3 class="mb-3 text-success">Punti: {{ exercise.score }}</h3>
+            {% endif %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-md-6">
-            <h5>Descrizione:</h5>
-            <div>{{ exercise.description|safe }}</div>
+            <h5 class="mb-3 text-info">Descrizione:</h5>
+            <div class="text-justify">{{ exercise.description|safe }}</div>
         </div>
         <div class="col-md-6">
             <h5>Risposta:</h5>
