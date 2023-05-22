@@ -20,7 +20,7 @@
                 {% csrf_token %}
                 {% if exercise.type == 'O' %}
                     <div class="form-group">
-                      <textarea class="form-control" name="answer_text" id="answer_text" rows="5">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
+                      <textarea class="form-control" name="answer_text" id="open_answer" rows="5" style="display: none">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
                     </div>
                 {% elif exercise.type == 'M' %}
                     {% for choice in exercise.choices.all %}
@@ -43,7 +43,7 @@ int main() {
                 <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
                 {% elif exercise.type == 'D' %}
                     <div class="form-group">
-                      <textarea class="form-control" name="answer_text" id="answer_text" rows="5">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
+                      <textarea class="form-control" name="answer_text" id="open_answer" rows="5" style="display: none">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
                     </div>
                 {% endif %}
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
@@ -119,6 +119,7 @@ div.form-check {
     function showSolution() {
         const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
+        const openAnswer = $('#open_answer');
 
         const wrongChoices = $('.form-check');
         wrongChoices.css('color', 'red');
@@ -126,18 +127,30 @@ div.form-check {
         const correctChoice = $('.form-check.correct');
         correctChoice.css('color', 'green');
 
-        html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
-        codeElement.innerHTML = html_text;
+        if(hiddenInput != null) {
+            html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
+            codeElement.innerHTML = html_text;
+        }
+
+        if(openAnswer != null) {
+            openAnswer.fadeIn();
+        }
     }
 
     $(document).ready(function() {
         const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
+        const openAnswer = $('#open_answer');
+
         if(hiddenInput != null && hiddenInput.value != "" && is_graded) {
             html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
             codeElement.innerHTML = html_text;
         } else {
             highlightCode();
+        }
+
+        if(openAnswer != null) {
+            openAnswer.hide();
         }
 
         // diagrammi di flusso
