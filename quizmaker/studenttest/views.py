@@ -126,7 +126,9 @@ def submit_exercise(request, exercise_id):
         else:
             form = SubmissionForm(request.POST, request.FILES, instance=submission)
             if form.is_valid():
+                print("Form valido!")
                 if test.is_graded and test.due_date < timezone.now():
+                    print("Errore nella data!" + str(test.due_date) + " " + str(timezone.now()))
                     return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
                 form.user = request.user
                 form.exercise = exercise
