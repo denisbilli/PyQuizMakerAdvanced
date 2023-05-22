@@ -193,24 +193,25 @@ class UserTestReportView(View):
         styles = getSampleStyleSheet()
         elements = []
 
-        title = f"{user.username}'s Submissions for {test.name}"
-        elements.append(Paragraph(title, styles['Title']))
-        elements.append(Spacer(1, 24))
+        # format the date in a human-readable format
+	title = f"{test.name}\ndel {test.due_date.strftime('%d/%m/%Y')} di {user.first_name} {user.last_name}"
+	elements.append(Paragraph(title, styles['Title']))
+	elements.append(Spacer(1, 24))
 
         monospace_style = ParagraphStyle('monospace', parent=styles['BodyText'], fontName='Courier', fontSize=8)
 
         for submission in submissions:
-            exercise_title = Paragraph(f"Exercise: {submission.exercise.title}", styles['Heading2'])
+            exercise_title = Paragraph(f"Esercizio: {submission.exercise.title}", styles['Heading2'])
             elements.append(exercise_title)
 
             if submission.exercise.type in ['O']:
-                answer_text = Paragraph(f"Answer: {submission.answer_text}", styles['BodyText'])
+                answer_text = Paragraph(f"Risposta: {submission.answer_text}", styles['BodyText'])
                 elements.append(answer_text)
             elif submission.exercise.type == 'M':
-                answer_choice = Paragraph(f"Answer: {submission.answer_choice.text}", styles['BodyText'])
+                answer_choice = Paragraph(f"Risposta: {submission.answer_choice.text}", styles['BodyText'])
                 elements.append(answer_choice)
             elif submission.exercise.type == 'C':
-                elements.append(Paragraph("Answer:", styles['BodyText']))
+                elements.append(Paragraph("Risposta:", styles['BodyText']))
                 code = Preformatted(submission.answer_text.replace('\r',''), monospace_style)
                 elements.append(code)
 
@@ -222,10 +223,10 @@ class UserTestReportView(View):
 
         username_slug = slugify(user.username)
         testname_slug = slugify(test.name)
-        date_str = test.due_date.strftime("%Y%m%d")  # Current date in YYYYMMDD format
+        date_slug = test.due_date.strftime("%Y%m%d")  # Date in YYYYMMDD format for the filename
 
         # Creating the filename
-        filename = f"{username_slug}_{date_str}_{testname_slug}.pdf"
+        filename = f"{username_slug}_{date_slug}_{testname_slug}.pdf"
 
         # Pass the filename when returning the response
         response = FileResponse(buffer, as_attachment=True, filename=filename)
