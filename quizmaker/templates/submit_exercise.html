@@ -42,6 +42,9 @@ int main() {
     return 0;
 }</code>
 </pre>
+                {% if exercise.test.is_graded %}
+                    <button type="button" onclick="pasteCode()" class="btn btn-primary">Incolla il tuo codice</button>
+                {% endif %}
                 <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
                 {% elif exercise.type == 'D' %}
                     <div class="form-group">
