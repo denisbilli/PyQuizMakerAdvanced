@@ -194,9 +194,9 @@ class UserTestReportView(View):
         elements = []
 
         # format the date in a human-readable format
-	title = f"{test.name}\ndel {test.due_date.strftime('%d/%m/%Y')} di {user.first_name} {user.last_name}"
-	elements.append(Paragraph(title, styles['Title']))
-	elements.append(Spacer(1, 24))
+        title = f"{test.name}\ndel {test.due_date.strftime('%d/%m/%Y')} di {user.first_name} {user.last_name}"
+        elements.append(Paragraph(title, styles['Title']))
+        elements.append(Spacer(1, 24))
 
         monospace_style = ParagraphStyle('monospace', parent=styles['BodyText'], fontName='Courier', fontSize=8)
 
