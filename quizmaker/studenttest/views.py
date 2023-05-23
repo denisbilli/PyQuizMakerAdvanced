@@ -13,21 +13,23 @@ from django.contrib import messages
 from django.db.models import Sum
 
 # ReportLab
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph, Spacer, Preformatted, SimpleDocTemplate
 from reportlab.platypus import BaseDocTemplate, PageTemplate, Frame, Paragraph, Spacer, PageBreak
 from reportlab.lib.units import mm
+from reportlab.lib.enums import TA_RIGHT
 
 from .models import *
 from .forms import SubmissionForm, RegistrationForm, LoginForm, UpdateProfileForm, PasswordChangeForm
 
 
 class MyDocTemplate(BaseDocTemplate):
-    def __init__(self, filename, **kwargs):
+    def __init__(self, filename, user, test, **kwargs):
+        self.user = user
+        self.test = test
         BaseDocTemplate.__init__(self, filename, **kwargs)
-        template = PageTemplate('normal',
-                                [Frame(18 * mm, 18 * mm, 167 * mm, 243 * mm, id='main')])  # Converted from inches to mm
+        template = PageTemplate('normal', [Frame(20*mm, 20*mm, (A4[0]-40*mm), (A4[1]-40*mm), id='main')])
         template.beforeDrawPage = self.before_page
         self.addPageTemplates([template])
 
@@ -36,18 +38,26 @@ class MyDocTemplate(BaseDocTemplate):
         styles = getSampleStyleSheet()
 
         # Header
-        header = Paragraph(f"Date: {test.due_date.strftime('%d/%m/%Y')}", styles['Normal'])
+        header = Paragraph(f"Date: {self.test.due_date.strftime('%d/%m/%Y')}", styles['Normal'])
         w, h = header.wrap(document.width, document.topMargin)
-        header.drawOn(canvas, document.leftMargin, document.height + document.topMargin - h)
+        print(f"Header width: {w}, Header height: {h}")  # Debugging line
+        print(f"Document leftMargin: {document.leftMargin}, Document height: {document.pagesize[1]}")  # Debugging line
+        header.drawOn(canvas, document.leftMargin, document.pagesize[1] - h - 10 * mm)
 
-        header2 = Paragraph(f"{user.first_name} {user.last_name}", styles['Normal'])
-        w, h = header2.wrap(document.width, document.topMargin)
-        header2.drawOn(canvas, document.width + document.rightMargin - w, document.height + document.topMargin - h)
+        right_aligned_style = ParagraphStyle('RightAligned', parent=styles['Normal'], alignment=TA_RIGHT)
+        header2 = Paragraph(f"{self.user.first_name} {self.user.last_name}", right_aligned_style)
+        w, h = header2.wrap(200, document.topMargin)
+        print(f"Header2 width: {w}, Header2 height: {h}")  # Debugging line
+        print(f"Document width: {document.pagesize[0]}, Document rightMargin: {document.rightMargin}")  # Debugging line
+        header2.drawOn(canvas, document.pagesize[0] - w - 20 * mm, document.pagesize[1] - h - 10 * mm)
 
         # Footer
         footer = Paragraph(f"Page: {document.page}", styles['Normal'])
         w, h = footer.wrap(document.width, document.bottomMargin)
-        footer.drawOn(canvas, document.width + document.rightMargin - w, h)
+        print(f"Footer width: {w}, Footer height: {h}")  # Debugging line
+        print(
+            f"Document width: {document.pagesize[0]}, Document bottomMargin: {document.bottomMargin}")  # Debugging line
+        footer.drawOn(canvas, document.pagesize[0] - w - 20 * mm, h)
 
         canvas.restoreState()
 
@@ -221,7 +231,7 @@ class UserTestReportView(View):
         buffer = io.BytesIO()
 
         # doc = SimpleDocTemplate(buffer, pagesize=letter)
-        doc = MyDocTemplate('test.pdf', pagesize=letter)
+        doc = MyDocTemplate(buffer, user, test, pagesize=A4)
         # Story = [Spacer(1, 2 * inch), Paragraph("Hello, world!", getSampleStyleSheet()['Normal']), PageBreak()]
         # doc.build(Story)
 
