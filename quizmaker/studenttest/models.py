@@ -1,5 +1,15 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+from django.utils import timezone
+
+
+def user_directory_path(instance, filename):
+    # This will convert the username to lowercase
+    # and will replace spaces with underscores
+    username = slugify(instance.user.username.lower())
+    return f'{username}/test_{timezone.now().strftime("%Y%m%d")}/{filename}'
 
 
 class Test(models.Model):
@@ -56,7 +66,7 @@ class Submission(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     answer_text = models.TextField(blank=True, null=True)
     answer_choice = models.ForeignKey(Choice, on_delete=models.CASCADE, blank=True, null=True)
-    file = models.FileField(upload_to='test_%Y%m%d/', blank=True, null=True)
+    file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s submission for {self.exercise.title}"

@@ -44,6 +44,10 @@ int main() {
 </pre>
                 {% if exercise.test.is_graded %}
                     <button type="button" onclick="pasteCode()" class="btn btn-primary">Incolla il tuo codice</button>
+                    <div class="custom-file mt-3">
+                        <input type="file" class="custom-file-input" id="submitFile" name="file" accept=".cpp">
+                        <label class="custom-file-label" for="submitFile">Scegli il file</label>
+                    </div>
                 {% endif %}
                 <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
                 {% elif exercise.type == 'D' %}
@@ -146,6 +150,7 @@ div.form-check {
         const codeElement = document.querySelector('#answer');
         const hiddenInput = document.querySelector('#answer_text');
         const openAnswer = $('#open_answer');
+        const mermaidElements = $(".mermaid").length;
 
         if(hiddenInput != null && hiddenInput.value != "" && is_graded) {
             html_text = Prism.highlight(hiddenInput.value, Prism.languages.cpp, 'cpp');
@@ -158,11 +163,21 @@ div.form-check {
             openAnswer.hide();
         }
 
-        // diagrammi di flusso
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'normal'
-        });
+        if(mermaidElements > 0) {
+            // diagrammi di flusso
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'normal'
+            });
+        }
+
+        // on file input change
+        $('#submitFile').on('change', function () {
+            // get file name
+            var fileName = $(this).val().split('\\').pop();
+            // replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
     });
 </script>
 {% endblock %}
