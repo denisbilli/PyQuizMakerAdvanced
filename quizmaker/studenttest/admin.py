@@ -93,3 +93,4 @@ class UsersPerTestView(PermissionRequiredMixin, DetailView):
 @admin.register(UserExercise)
 class UserExerciseAdmin(admin.ModelAdmin):
     list_display = ('user', 'exercise', 'signed')
+    list_filter = ('user', 'exercise__test',)
