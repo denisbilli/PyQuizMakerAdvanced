@@ -16,9 +16,40 @@ from django.db.models import Sum
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph, Spacer, Preformatted, SimpleDocTemplate
+from reportlab.platypus import BaseDocTemplate, PageTemplate, Frame, Paragraph, Spacer, PageBreak
+from reportlab.lib.units import mm
 
 from .models import *
 from .forms import SubmissionForm, RegistrationForm, LoginForm, UpdateProfileForm, PasswordChangeForm
+
+
+class MyDocTemplate(BaseDocTemplate):
+    def __init__(self, filename, **kwargs):
+        BaseDocTemplate.__init__(self, filename, **kwargs)
+        template = PageTemplate('normal',
+                                [Frame(18 * mm, 18 * mm, 167 * mm, 243 * mm, id='main')])  # Converted from inches to mm
+        template.beforeDrawPage = self.before_page
+        self.addPageTemplates([template])
+
+    def before_page(self, canvas, document):
+        canvas.saveState()
+        styles = getSampleStyleSheet()
+
+        # Header
+        header = Paragraph(f"Date: {test.due_date.strftime('%d/%m/%Y')}", styles['Normal'])
+        w, h = header.wrap(document.width, document.topMargin)
+        header.drawOn(canvas, document.leftMargin, document.height + document.topMargin - h)
+
+        header2 = Paragraph(f"{user.first_name} {user.last_name}", styles['Normal'])
+        w, h = header2.wrap(document.width, document.topMargin)
+        header2.drawOn(canvas, document.width + document.rightMargin - w, document.height + document.topMargin - h)
+
+        # Footer
+        footer = Paragraph(f"Page: {document.page}", styles['Normal'])
+        w, h = footer.wrap(document.width, document.bottomMargin)
+        footer.drawOn(canvas, document.width + document.rightMargin - w, h)
+
+        canvas.restoreState()
 
 
 @login_required
@@ -189,7 +220,11 @@ class UserTestReportView(View):
 
         buffer = io.BytesIO()
 
-        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        # doc = SimpleDocTemplate(buffer, pagesize=letter)
+        doc = MyDocTemplate('test.pdf', pagesize=letter)
+        # Story = [Spacer(1, 2 * inch), Paragraph("Hello, world!", getSampleStyleSheet()['Normal']), PageBreak()]
+        # doc.build(Story)
+
         styles = getSampleStyleSheet()
         elements = []
 
