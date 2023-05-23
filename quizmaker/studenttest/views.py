@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Sum
 from django.core.files.storage import default_storage
+from django.db.models import Count, Q
 
 # ReportLab
 from reportlab.lib.pagesizes import letter, A4
@@ -112,7 +113,9 @@ def exercise_list(request, test_id):
     if cannot_enter_view:
         return redirect('test_list')
 
-    exercises = Exercise.objects.filter(test=test, enabled=True)
+    exercises = Exercise.objects.filter(test=test, enabled=True).annotate(
+        signed_count=Count('userexercise', filter=Q(userexercise__signed=True))
+    )
     completed_exercises = Submission.objects.filter(user=request.user, exercise__in=exercises).values_list('exercise', flat=True)
 
     # Fetch the UserExercise objects related to the current user and test
