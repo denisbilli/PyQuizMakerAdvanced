@@ -52,7 +52,7 @@ int main() {
                 <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
                 {% elif exercise.type == 'D' %}
                     <div class="form-group">
-                      <textarea class="form-control" name="answer_text" id="open_answer" rows="5" style="display: none">{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
+                      <textarea class="form-control" name="answer_text" rows="5" {% if not exercise.test.is_graded %}id="open_answer" style="display: none"{% endif %}>{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}</textarea>
                     </div>
                 {% endif %}
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
