@@ -208,7 +208,7 @@ class UserTestReportView(View):
             exercise_title = Paragraph(f"Esercizio: {submission.exercise.title}", styles['Heading2'])
             elements.append(exercise_title)
 
-            exercise_text = Paragraph(f"Testo: {submission.exercise.text}", styles['BodyText'])
+            exercise_text = Paragraph(f"Testo: {submission.exercise.description}", styles['BodyText'])
             elements.append(exercise_text)
 
             if submission.exercise.type in ['O']:
