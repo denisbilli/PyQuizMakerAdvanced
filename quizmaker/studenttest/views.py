@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Sum
+from django.core.files.storage import default_storage
 
 # ReportLab
 from reportlab.lib.pagesizes import letter, A4
@@ -264,7 +265,14 @@ class UserTestReportView(View):
                 elements.append(answer_choice)
             elif submission.exercise.type == 'C':
                 elements.append(Paragraph("Risposta:", styles['BodyText']))
-                code = Preformatted(submission.answer_text.replace('\r',''), monospace_style)
+                if submission.answer_text:
+                    code = Preformatted(submission.answer_text.replace('\r',''), monospace_style)
+                elif submission.file:
+                    with default_storage.open(submission.file.name, 'r') as f:
+                        code_content = f.read()
+                    code = Preformatted(code_content.replace('\r',''), monospace_style)
+                else:
+                    code = Paragraph("No response provided", styles['BodyText'])
                 elements.append(code)
 
             elements.append(Spacer(1, 12))
