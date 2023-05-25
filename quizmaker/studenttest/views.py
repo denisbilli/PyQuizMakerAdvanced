@@ -274,6 +274,7 @@ class UserTestReportView(View):
                 if submission.answer_text:
                     code = Preformatted(submission.answer_text.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
                 elif submission.file:
+                    print("trying to open file" + submission.file.name)
                     with default_storage.open(submission.file.name, 'r') as f:
                         code_content = f.read()
                     code = Preformatted(code_content.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
