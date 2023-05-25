@@ -97,7 +97,7 @@ def profile(request):
 def test_list(request):
     now = timezone.now()
     tests = Test.objects.filter(enabled=True, is_graded=False)
-    tests = tests | Test.objects.filter(enabled=True, is_graded=True, due_date__gte=now)
+    tests = tests | Test.objects.filter(enabled=True, is_graded=True)
     return render(request, 'test_list.html', {'tests': tests})
 
 
