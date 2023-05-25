@@ -107,11 +107,11 @@ def exercise_list(request, test_id):
     test = get_object_or_404(Test, id=test_id)
     total_score = test.exercises.aggregate(total=Sum('score'))['total'] or 0
 
-    # cannot_enter_view = not request.user.is_superuser and (
-    #             (test.is_graded and test.due_date < now) or (not test.enabled))
-    #
-    # if cannot_enter_view:
-    #     return redirect('test_list')
+    cannot_enter_view = not request.user.is_superuser and (
+                (test.is_graded and test.due_date < now) or (not test.enabled))
+
+    if cannot_enter_view:
+        return redirect('test_list')
 
     exercises = Exercise.objects.filter(test=test, enabled=True).annotate(
         signed_count=Count('userexercise', filter=Q(userexercise__signed=True))
@@ -164,26 +164,26 @@ def submit_exercise(request, exercise_id):
     user_exercise, created = UserExercise.objects.get_or_create(user=request.user, exercise=exercise)
 
     if request.method == 'POST':
-        # if not test.is_graded:
-        #     user_exercise.signed = not user_exercise.signed
-        #     user_exercise.save()
-        #     return redirect('exercise_list', test_id=exercise.test.id)
-        # else:
-        form = SubmissionForm(request.POST, request.FILES, instance=submission)
-        if form.is_valid():
-            print("Form valido!")
-            # if test.is_graded and test.due_date < now:
-            #     print("Errore nella data!" + str(test.due_date) + " " + str(now))
-                # return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
-            form.user = request.user
-            form.exercise = exercise
-            form.save(commit=True)
+        if not test.is_graded:
+            user_exercise.signed = not user_exercise.signed
+            user_exercise.save()
             return redirect('exercise_list', test_id=exercise.test.id)
+        else:
+            form = SubmissionForm(request.POST, request.FILES, instance=submission)
+            if form.is_valid():
+                print("Form valido!")
+                if test.is_graded and test.due_date < now:
+                    print("Errore nella data!" + str(test.due_date) + " " + str(now))
+                    return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
+                form.user = request.user
+                form.exercise = exercise
+                form.save(commit=True)
+                return redirect('exercise_list', test_id=exercise.test.id)
     else:
-        # cannot_enter_view = not request.user.is_superuser and (
-        #         (test.is_graded and test.due_date < now) or (not test.enabled))
-        # if cannot_enter_view:
-        #     return redirect('test_list')
+        cannot_enter_view = not request.user.is_superuser and (
+                (test.is_graded and test.due_date < now) or (not test.enabled))
+        if cannot_enter_view:
+            return redirect('test_list')
         form = SubmissionForm(instance=submission)
 
     return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission,
