@@ -251,31 +251,34 @@ class UserTestReportView(View):
         elements.append(test_details)
         elements.append(Spacer(1, 24))
 
-        monospace_style = ParagraphStyle('monospace', parent=styles['BodyText'], fontName='Courier', fontSize=8)
+        heading_style = ParagraphStyle('monospace', parent=styles['Heading2'], fontName='Helvetica', fontSize=12)
+        body_style = ParagraphStyle('monospace', parent=styles['Heading2'], fontName='Helvetica', fontSize=10)
+        monospace_style = ParagraphStyle('monospace', parent=styles['BodyText'], fontName='Courier', fontSize=10)
 
         for submission in submissions:
-            exercise_title = Paragraph(f"Esercizio: {submission.exercise.title}", styles['Heading2'])
+            exercise_title = Paragraph(f"Esercizio {submission.exercise.title} - Punti {submission.exercise.score}", heading_style)
             elements.append(exercise_title)
 
-            exercise_text = Paragraph(f"Testo: {submission.exercise.description}", styles['BodyText'])
+            exercise_text = Paragraph(f"Testo: {submission.exercise.description}", body_style)
             elements.append(exercise_text)
+            elements.append(Spacer(1, 12))
 
-            if submission.exercise.type in ['O']:
-                answer_text = Paragraph(f"Risposta: {submission.answer_text}", styles['BodyText'])
+            if submission.exercise.type in ['O', 'D']:
+                answer_text = Paragraph(f"Risposta: {submission.answer_text}", monospace_style)
                 elements.append(answer_text)
             elif submission.exercise.type == 'M':
-                answer_choice = Paragraph(f"Risposta: {submission.answer_choice.text}", styles['BodyText'])
+                answer_choice = Paragraph(f"Risposta: {submission.answer_choice.text}", monospace_style)
                 elements.append(answer_choice)
             elif submission.exercise.type == 'C':
-                elements.append(Paragraph("Risposta:", styles['BodyText']))
+                elements.append(Paragraph("Risposta:", monospace_style))
                 if submission.answer_text:
-                    code = Preformatted(submission.answer_text.replace('\r',''), monospace_style)
+                    code = Preformatted(submission.answer_text.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
                 elif submission.file:
                     with default_storage.open(submission.file.name, 'r') as f:
                         code_content = f.read()
-                    code = Preformatted(code_content.replace('\r',''), monospace_style)
+                    code = Preformatted(code_content.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
                 else:
-                    code = Paragraph("No response provided", styles['BodyText'])
+                    code = Paragraph("No response provided", monospace_style)
                 elements.append(code)
 
             elements.append(Spacer(1, 12))
