@@ -180,10 +180,10 @@ def submit_exercise(request, exercise_id):
                 form.save(commit=True)
                 return redirect('exercise_list', test_id=exercise.test.id)
     else:
-        cannot_enter_view = not request.user.is_superuser and (
-                (test.is_graded and test.due_date < now) or (not test.enabled))
-        if cannot_enter_view:
-            return redirect('test_list')
+        # cannot_enter_view = not request.user.is_superuser and (
+        #         (test.is_graded and test.due_date < now) or (not test.enabled))
+        # if cannot_enter_view:
+        #     return redirect('test_list')
         form = SubmissionForm(instance=submission)
 
     return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission,
