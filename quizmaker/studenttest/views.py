@@ -107,11 +107,11 @@ def exercise_list(request, test_id):
     test = get_object_or_404(Test, id=test_id)
     total_score = test.exercises.aggregate(total=Sum('score'))['total'] or 0
 
-    cannot_enter_view = not request.user.is_superuser and (
-                (test.is_graded and test.due_date < now) or (not test.enabled))
-
-    if cannot_enter_view:
-        return redirect('test_list')
+    # cannot_enter_view = not request.user.is_superuser and (
+    #             (test.is_graded and test.due_date < now) or (not test.enabled))
+    #
+    # if cannot_enter_view:
+    #     return redirect('test_list')
 
     exercises = Exercise.objects.filter(test=test, enabled=True).annotate(
         signed_count=Count('userexercise', filter=Q(userexercise__signed=True))
@@ -172,9 +172,9 @@ def submit_exercise(request, exercise_id):
             form = SubmissionForm(request.POST, request.FILES, instance=submission)
             if form.is_valid():
                 print("Form valido!")
-                if test.is_graded and test.due_date < now:
-                    print("Errore nella data!" + str(test.due_date) + " " + str(now))
-                    return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
+                # if test.is_graded and test.due_date < now:
+                #     print("Errore nella data!" + str(test.due_date) + " " + str(now))
+                    # return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
                 form.user = request.user
                 form.exercise = exercise
                 form.save(commit=True)
