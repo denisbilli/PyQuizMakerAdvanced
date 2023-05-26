@@ -111,6 +111,14 @@ def exercise_list(request, test_id):
                 (test.is_graded and test.due_date < now) or (not test.enabled))
 
     if cannot_enter_view:
+        print("L'utente " + request.user.username + " non ha i permessi per accedere al test " + test.name)
+        print("Check test finale: " + str(test.is_graded))
+        print("Check test abilitato: " + str(test.enabled))
+        if test.due_date is not None:
+            print("Check data: " + str(test.due_date.strftime("%d/%m/%Y %H:%M")) + " " +
+                  str(now.strftime("%d/%m/%Y %H:%M")))
+        else:
+            print("Check data: Nessuna data impostata")
         return redirect('test_list')
 
     exercises = Exercise.objects.filter(test=test, enabled=True).annotate(
@@ -173,8 +181,16 @@ def submit_exercise(request, exercise_id):
             if form.is_valid():
                 print("Form valido!")
                 if test.is_graded and test.due_date < now:
-                    print("Errore nella data!" + str(test.due_date) + " " + str(now))
-                    return render(request, 'error.html', {'message': 'The due date for this test has passed.'})
+                    print("L'utente " + request.user.username + " non ha i permessi per accedere al test " + test.name)
+                    print("Check test finale: " + str(test.is_graded))
+                    print("Check test abilitato: " + str(test.enabled))
+                    if test.due_date is not None:
+                        print("Check data: " + str(test.due_date.strftime("%d/%m/%Y %H:%M")) + " " +
+                              str(now.strftime("%d/%m/%Y %H:%M")))
+                    else:
+                        print("Check data: Nessuna data impostata")
+                    return render(request, 'error.html', {'message': 'La data di consegna è passata, oppure il test '
+                                                                     'non è abilitato.'})
                 form.user = request.user
                 form.exercise = exercise
                 form.save(commit=True)
@@ -183,7 +199,16 @@ def submit_exercise(request, exercise_id):
         cannot_enter_view = not request.user.is_superuser and (
                 (test.is_graded and test.due_date < now) or (not test.enabled))
         if cannot_enter_view:
-            return redirect('test_list')
+            print("L'utente " + request.user.username + " non ha i permessi per accedere al test " + test.name)
+            print("Check test finale: " + str(test.is_graded))
+            print("Check test abilitato: " + str(test.enabled))
+            if test.due_date is not None:
+                print("Check data: " + str(test.due_date.strftime("%d/%m/%Y %H:%M")) + " " +
+                      str(now.strftime("%d/%m/%Y %H:%M")))
+            else:
+                print("Check data: Nessuna data impostata")
+            return render(request, 'error.html', {'message': 'La data di consegna è passata, oppure il test non è '
+                                                             'abilitato.'})
         form = SubmissionForm(instance=submission)
 
     return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission,
