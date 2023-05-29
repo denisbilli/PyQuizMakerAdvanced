@@ -18,6 +18,7 @@ class Test(models.Model):
     enabled = models.BooleanField(default=False)
     is_graded = models.BooleanField(default=False)
     due_date = models.DateTimeField(null=True, blank=True)
+    visible_to = models.ManyToManyField(User, blank=True, related_name='visible_tests')
 
     def __str__(self):
         return self.name

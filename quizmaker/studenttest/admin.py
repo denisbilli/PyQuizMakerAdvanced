@@ -27,7 +27,7 @@ class ChoiceInline(admin.TabularInline):
 @admin.register(Exercise)
 class ExerciseAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
-    list_display = ('title', 'test', 'type', 'duplicate_link')
+    list_display = ('title', 'test', 'type', 'enabled', 'score', 'duplicate_link')
     list_filter = ['test', 'type']
     search_fields = ['title']
 
@@ -42,6 +42,7 @@ class TestAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'enabled', 'is_graded', 'due_date', 'users_per_test')
     list_filter = ['is_graded']
     search_fields = ['name', 'description']
+    filter_horizontal = ('visible_to',)
     inlines = [ExerciseInline]  # Add the inline to the admin
 
     def get_urls(self):

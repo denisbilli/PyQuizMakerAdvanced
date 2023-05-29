@@ -95,9 +95,12 @@ def profile(request):
 
 @login_required
 def test_list(request):
-    now = timezone.now()
-    tests = Test.objects.filter(enabled=True, is_graded=False)
-    tests = tests | Test.objects.filter(enabled=True, is_graded=True)
+    # Show only the tests that are either
+    # visible to everyone (visible_to is empty) or visible to the current user.
+    tests = Test.objects.filter(
+        Q(visible_to__isnull=True) | Q(visible_to=request.user),
+        enabled=True,
+    )
     return render(request, 'test_list.html', {'tests': tests})
 
 
