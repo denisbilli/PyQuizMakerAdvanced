@@ -9,6 +9,7 @@
       {% if test.is_graded %}
         <h4 class="mx-auto">Punteggio totale: {{ total_score }}</h4>
       {% endif %}
+      <button id="toggleView" class="btn btn-info mr-2">Tabella</button>
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Nessun filtro
@@ -35,9 +36,9 @@
     </div>
   </div>
 
-  <div class="row" id="exercise-cards">
+  <div class="row cards-view" id="exercise-cards">
     {% for exercise in exercises %}
-      <div class="col-sm-4 mb-4 exercise-card mix" data-type="{{ exercise.type }}" {% if exercise.test.is_graded %}data-score="{{ exercise.score }}"{% endif %}>
+      <div class="col-sm-4 mb-4 exercise-card mix" data-type="{{ exercise.type }}" {% if exercise.test.is_graded %}data-score="{{ exercise.score }}"{% else %}data-score="0"{% endif %}>
         <div class="card h-100">
           <div class="card-body d-flex flex-column align-items-center justify-content-center">
             <h5 class="card-title text-center">
@@ -59,6 +60,41 @@
     {% empty %}
       <p>Non ci sono esercizi.</p>
     {% endfor %}
+  </div>
+
+  <div class="table-view" id="exercise-table" style="display: none;">
+      <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Score</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for exercise in exercises %}
+                  <tr class="exercise-element mix" data-type="{{ exercise.type }}" {% if exercise.test.is_graded %}data-score="{{ exercise.score }}"{% else %}data-score="0"{% endif %}>
+                      <td>
+                          <a href="{% url 'submit_exercise' exercise.id %}">{{ exercise.title }}</a>
+                          {% if request.user.is_superuser %}
+                              <span class="badge badge-secondary">{{ exercise.signed_count }}</span>
+                          {% endif %}
+                          {% if exercise.id in completed_exercises %}
+                              <i class="fas fa-check"></i>
+                          {% elif exercise.id in signed_exercises %}
+                              <i class="fas fa-flag"></i>
+                          {% endif %}
+                      </td>
+                      <td>{{ exercise.get_type_display }}</td>
+                      <td>{% if exercise.test.is_graded %}{{ exercise.score }}{% endif %}</td>
+                  </tr>
+              {% empty %}
+                  <tr>
+                      <td colspan="3">Non ci sono esercizi.</td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
   </div>
 
   <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
@@ -83,6 +119,19 @@ $(document).ready(function() {
   });
   mixer.filter('.exercise-card');
 
+  var mixer2 = mixitup('#exercise-table', {
+    "load": {
+        "sort": "score:asc"
+    },
+    "animation": {
+        "duration": 250,
+        "nudge": true,
+        "reverseOut": false,
+        "effects": "fade translateZ(-100px)"
+    }
+  });
+  mixer2.filter('.exercise-element');
+
   $(".exercise-filter").click(function(e) {
       e.preventDefault();
       var selectedType = $(this).data('filter');
@@ -90,8 +139,10 @@ $(document).ready(function() {
       console.log(selectedType);
       if (selectedType == 'all') {
           mixer.filter('.exercise-card'); // This will show all exercises
+          mixer2.filter('.exercise-element'); // This will show all exercises
       } else {
           mixer.filter('.exercise-card[data-type="' + selectedType + '"]'); // This will filter based on the selected type
+          mixer2.filter('.exercise-element[data-type="' + selectedType + '"]'); // This will filter based on the selected type
       }
       $('#dropdownMenuButton').text(filterText);
   });
@@ -102,6 +153,11 @@ $(document).ready(function() {
       var sortText = $(this).text();
       $('#dropdownSortButton').text(sortText);
       mixer.sort(sortValue);
+  });
+
+  $('#toggleView').click(function() {
+      $('.cards-view').toggle();
+      $('.table-view').toggle();
   });
 });
 </script>
