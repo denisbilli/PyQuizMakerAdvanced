@@ -2,6 +2,7 @@
 import io
 import copy
 import chardet
+import codecs
 
 from django.http import FileResponse
 from django.views import View
@@ -308,7 +309,7 @@ class UserTestReportView(View):
                         rawdata = f.read()
                     result = chardet.detect(rawdata)
                     charenc = result['encoding']
-                    with default_storage.open(submission.file.name, 'r', encoding=charenc) as f:
+                    with codecs.open(default_storage.path(submission.file.name), 'r', encoding=charenc) as f:
                         code_content = f.read()
                     code = Preformatted(code_content.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
                 else:
