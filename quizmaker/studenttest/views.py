@@ -1,6 +1,7 @@
 # views.py
 import io
 import copy
+import chardet
 
 from django.http import FileResponse
 from django.views import View
@@ -303,9 +304,12 @@ class UserTestReportView(View):
                     code = Preformatted(submission.answer_text.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
                 elif submission.file:
                     print("trying to open file" + submission.file.name)
-                    with default_storage.open(submission.file.name, 'r') as f:
-                        code_content = f.read()
-                    code = Preformatted(code_content.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
+                    with open(submission.file.name, 'rb').read() as rawdata:
+                        result = chardet.detect(rawdata)
+                        charenc = result['encoding']
+                        with default_storage.open(submission.file.name, 'r', encoding=charenc) as f:
+                            code_content = f.read()
+                            code = Preformatted(code_content.replace('\r\n', '\n').replace('\t', ' '), monospace_style)
                 else:
                     code = Paragraph("No response provided", monospace_style)
                 elements.append(code)
