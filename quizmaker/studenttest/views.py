@@ -3,6 +3,7 @@ import io
 import copy
 import chardet
 import codecs
+import html
 
 from django.http import FileResponse
 from django.views import View
@@ -294,7 +295,8 @@ class UserTestReportView(View):
             elements.append(Spacer(1, 12))
 
             if submission.exercise.type in ['O', 'D']:
-                answer_text = Paragraph(f"Risposta: {submission.answer_text}", monospace_style)
+                escaped_text = html.escape(submission.answer_text)
+                answer_text = Paragraph(f"Risposta: {escaped_text}", monospace_style)
                 elements.append(answer_text)
             elif submission.exercise.type == 'M':
                 answer_choice = Paragraph(f"Risposta: {submission.answer_choice.text}", monospace_style)
