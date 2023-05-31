@@ -1,12 +1,15 @@
 # myapp/admin.py
 
+import copy
+
 from django.urls import path
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.html import format_html
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from .models import *
 
 from django.views.generic.detail import DetailView
@@ -44,6 +47,32 @@ class TestAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     filter_horizontal = ('visible_to',)
     inlines = [ExerciseInline]  # Add the inline to the admin
+    actions = ['duplicate_test', ]
+
+    def duplicate_test(self, request, queryset):
+        for test in queryset:
+            try:
+                print(f'Test {test.id} has {test.exercises.count()} exercises')
+                with transaction.atomic():
+                    # Duplicate the test
+                    test_copy = copy.deepcopy(test)
+                    test_copy.pk = None
+                    test_copy.enabled = False
+                    test_copy.save()
+
+                    # Duplicate the exercises
+                    exercises = Exercise.objects.filter(test=test)
+                    print(f'Found {test.exercises.count()} exercises to duplicate')
+                    for exercise in exercises:
+                        new_exercise = copy.deepcopy(exercise)
+                        new_exercise.pk = None
+                        new_exercise.enabled = False
+                        new_exercise.test = test_copy
+                        new_exercise.save()
+            except Exception as e:
+                self.message_user(request, f'Error duplicating test {test.id}: {str(e)}', messages.ERROR)
+
+    duplicate_test.short_description = 'Duplicate Test'
 
     def get_urls(self):
         urls = super().get_urls()
