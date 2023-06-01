@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col">
             <h1 class="mb-3 text-primary">{{ exercise.title }}</h1>
-            <h5 class="mb-3 text-muted">Tipologia: {{ exercise.get_type_display }}</h5>
+            <h5 class="mb-3 text-muted">{% translate "Tipologia" %}: {{ exercise.get_type_display }}</h5>
             {% if exercise.test.is_graded %}
-                <h3 class="mb-3 text-success">Punti: {{ exercise.score }}</h3>
+                <h3 class="mb-3 text-success">{% translate "Punti" %}: {{ exercise.score }}</h3>
             {% endif %}
         </div>
     </div>
     <div class="row mt-4">
         <div class="col-md-6">
-            <h5 class="mb-3 text-info">Descrizione:</h5>
+            <h5 class="mb-3 text-info">{% translate "Descrizione" %}:</h5>
             <div class="text-justify">{{ exercise.description|safe }}</div>
         </div>
         <div class="col-md-6">
-            <h5>Risposta:</h5>
+            <h5>{% translate "Risposta" %}:</h5>
             <form action="{% url 'submit_exercise' exercise.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% if exercise.type == 'O' %}
@@ -38,15 +39,15 @@
 <code class="language-cpp" id="answer">#include &#60;iostream&#62;
 
 int main() {
-    // Scrivi qui il tuo esercizio
+    // {% translate "Scrivi qui il tuo esercizio" %}
     return 0;
 }</code>
 </pre>
                 {% if exercise.test.is_graded %}
-                    <button type="button" onclick="pasteCode()" class="btn btn-primary">Incolla il tuo codice</button>
+                    <!-- <button type="button" onclick="pasteCode()" class="btn btn-primary">{% translate "Incolla il tuo codice" %}</button> -->
                     <div class="custom-file mt-3">
                         <input type="file" class="custom-file-input" id="submitFile" name="file" accept=".cpp">
-                        <label class="custom-file-label" for="submitFile">Scegli il file</label>
+                        <label class="custom-file-label" for="submitFile">{% translate "Scegli il file" %}</label>
                     </div>
                 {% endif %}
                 <input type="hidden" name="answer_text" id="answer_text" value="{% if submission %}{{ submission.answer_text }}{% elif not exercise.test.is_graded %}{{ exercise.expected_answer }}{% endif %}">
@@ -57,16 +58,16 @@ int main() {
                 {% endif %}
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
                     {% if not exercise.test.is_graded %}
-                        <button type="button" onclick="showSolution()" class="btn btn-info" id="btnShowSolution">Mostra soluzione</button>
+                        <button type="button" onclick="showSolution()" class="btn btn-info" id="btnShowSolution">{% translate "Mostra soluzione" %}</button>
                         {% if not user_exercise.signed %}
-                            <button type="submit" class="btn btn-success" id="btnSignExercise">Contrassegna</button>
+                            <button type="submit" class="btn btn-success" id="btnSignExercise">{% translate "Contrassegna" %}</button>
                         {% else %}
-                            <button type="submit" class="btn btn-danger" id="btnSignExercise">Rimuovi contrassegno</button>
+                            <button type="submit" class="btn btn-danger" id="btnSignExercise">{% translate "Rimuovi contrassegno" %}</button>
                         {% endif %}
                     {% else %}
-                        <button type="submit" class="btn btn-primary" id="btnSendAnswer">Invia Risposta</button>
+                        <button type="submit" class="btn btn-primary" id="btnSendAnswer">{% translate "Invia Risposta" %}</button>
                     {% endif %}
-                    <button type="button" onclick="location.href='{% url 'exercise_list' exercise.test.id %}'" class="btn btn-secondary">Indietro</button>
+                    <button type="button" onclick="location.href='{% url 'exercise_list' exercise.test.id %}'" class="btn btn-secondary">{% translate "Indietro" %}</button>
                 </div>
             </form>
         </div>

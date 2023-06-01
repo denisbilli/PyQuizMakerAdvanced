@@ -14,3 +14,9 @@ def add_class(value, arg):
     else:
         css_classes = arg
     return value.as_widget(attrs={'class': css_classes})
+
+
+@register.filter
+def replace(value, arg):
+    old, new = arg
+    return value.replace(old, new)

@@ -1,14 +1,14 @@
 <!-- test_list.html -->
-
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 {% if tests %}
   <table class="table mt-5">
     <thead>
       <tr>
-        <th scope="col">Test</th>
-        <th scope="col">Descrizione</th>
+        <th scope="col">{% translate "Test" %}</th>
+        <th scope="col">{% translate "Descrizione" %}</th>
         <th scope="col"></th>
       </tr>
     </thead>
@@ -19,9 +19,9 @@
           <td class="align-middle">{{ test.description|safe }}</td>
           <td class="align-middle">
             {% if test.is_graded %}
-              <a class="btn btn-success" href="{% url 'exercise_list' test.id %}">Inizia Test</a>
+              <a class="btn btn-success" href="{% url 'exercise_list' test.id %}">{% translate "Inizia Test" %}</a>
             {% else %}
-              <a class="btn btn-primary" href="{% url 'exercise_list' test.id %}">Mostra Esercizi</a>
+              <a class="btn btn-primary" href="{% url 'exercise_list' test.id %}">{% translate "Mostra Esercizi" %}</a>
             {% endif %}
           </td>
         </tr>
@@ -29,6 +29,6 @@
     </tbody>
   </table>
 {% else %}
-  <p class="mt-5">Non ci sono test attivi.</p>
+  <p class="mt-5">{% translate "Non ci sono test attivi." %}</p>
 {% endif %}
 {% endblock %}

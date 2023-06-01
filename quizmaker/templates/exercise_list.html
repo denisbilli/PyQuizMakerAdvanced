@@ -1,35 +1,34 @@
 <!-- exercise_list.html -->
-
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block content %}
   <div class="d-flex justify-content-between">
     <h2>{{ test.name }}</h2>
     <div class="d-flex justify-content-end align-items-center flex-grow-1">
       {% if test.is_graded %}
-        <h4 class="mx-auto">Punteggio totale: {{ total_score }}</h4>
+        <h4 class="mx-auto">{% translate "Punteggio totale" %}: {{ total_score }}</h4>
       {% endif %}
-      <button id="toggleView" class="btn btn-info mr-2">Tabella</button>
+      <button id="toggleView" class="btn btn-info mr-2">{% translate "Tabella" %}</button>
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Nessun filtro
+          {% translate "Nessun filtro" %}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item exercise-filter" href="#" data-filter="all">Nessun filtro</a>
-          <a class="dropdown-item exercise-filter" href="#" data-filter="O">Domande aperte</a>
-          <a class="dropdown-item exercise-filter" href="#" data-filter="M">A risposta multipla</a>
-          <a class="dropdown-item exercise-filter" href="#" data-filter="C">Codice</a>
-          <a class="dropdown-item exercise-filter" href="#" data-filter="D">Diagrammi di flusso</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="all">{% translate "Nessun filtro" %}</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="O">{% translate "Domanda aperta" %}</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="M">{% translate "Scelta multipla" %}</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="C">{% translate "Codice" %}</a>
+          <a class="dropdown-item exercise-filter" href="#" data-filter="D">{% translate "Diagramma di flusso" %}</a>
         </div>
       </div>
       {% if test.is_graded %}
       <div class="dropdown ml-2">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSortButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Punteggio più basso
+          {% translate "Punteggio più basso" %}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownSortButton">
-          <a class="dropdown-item sort-filter" href="#" data-sort="score:asc">Punteggio più basso</a>
-          <a class="dropdown-item sort-filter" href="#" data-sort="score:desc">Punteggio più alto</a>
+          <a class="dropdown-item sort-filter" href="#" data-sort="score:asc">{% translate "Punteggio più basso" %}</a>
+          <a class="dropdown-item sort-filter" href="#" data-sort="score:desc">{% translate "Punteggio più alto" %}</a>
         </div>
       </div>
       {% endif %}
@@ -53,7 +52,7 @@
                 {% endif %}
             </h5>
             <p class="card-text"><small class="text-muted">{{ exercise.get_type_display }}</small></p>
-            {% if exercise.test.is_graded %}<p class="card-text"><small class="text-muted">Punti: {{ exercise.score }}</small></p>{% endif %}
+            {% if exercise.test.is_graded %}<p class="card-text"><small class="text-muted">{% translate "Punti" %}: {{ exercise.score }}</small></p>{% endif %}
           </div>
         </div>
       </div>
@@ -66,9 +65,9 @@
       <table class="table">
           <thead>
               <tr>
-                  <th scope="col">Title</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Score</th>
+                  <th scope="col">{% translate "Titolo" %}</th>
+                  <th scope="col">{% translate "Tipologia" %}</th>
+                  <th scope="col">{% translate "Punteggio" %}</th>
               </tr>
           </thead>
           <tbody>
@@ -90,7 +89,7 @@
                   </tr>
               {% empty %}
                   <tr>
-                      <td colspan="3">Non ci sono esercizi.</td>
+                      <td colspan="3">{% translate "Non ci sono esercizi." %}</td>
                   </tr>
               {% endfor %}
           </tbody>
@@ -98,7 +97,7 @@
   </div>
 
   <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
-    <button type="button" onclick="location.href='{% url 'test_list' %}'" class="btn btn-secondary">Indietro</button>
+    <button type="button" onclick="location.href='{% url 'test_list' %}'" class="btn btn-secondary">{% translate "Indietro" %}</button>
   </div>
 {% endblock %}
 

@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 def user_directory_path(instance, filename):
@@ -26,10 +27,10 @@ class Test(models.Model):
 
 class Exercise(models.Model):
     TYPE_CHOICES = [
-        ('O', 'Domanda aperta'),
-        ('M', 'Scelta multipla'),
-        ('C', 'Codice'),
-        ('D', 'Diagramma di flusso'),
+        ('O', _('Domanda aperta')),
+        ('M', _('Scelta multipla')),
+        ('C', _('Codice')),
+        ('D', _('Diagramma di flusso')),
     ]
 
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='exercises')

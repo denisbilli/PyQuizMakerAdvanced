@@ -1,0 +1,213 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-31 16:57+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\quizmaker\settings.py:137
+msgid "Italiano"
+msgstr "Italien"
+
+#: .\quizmaker\settings.py:138
+msgid "English"
+msgstr "Anglais"
+
+#: .\quizmaker\settings.py:139
+msgid "French"
+msgstr "Français"
+
+#: .\quizmaker\settings.py:140
+msgid "Spanish"
+msgstr "Espagnol"
+
+#: .\quizmaker\urls.py:23
+msgid "admin/"
+msgstr ""
+
+#: .\studenttest\models.py:30 .\templates\exercise_list.html:18
+msgid "Domanda aperta"
+msgstr "Question ouverte"
+
+#: .\studenttest\models.py:31 .\templates\exercise_list.html:19
+msgid "Scelta multipla"
+msgstr "Choix multiple"
+
+#: .\studenttest\models.py:32 .\templates\exercise_list.html:20
+msgid "Codice"
+msgstr "Programmation"
+
+#: .\studenttest\models.py:33 .\templates\exercise_list.html:21
+msgid "Diagramma di flusso"
+msgstr "Diagramme de flux"
+
+#: .\templates\admin\studenttest\user_detail.html:6
+#: .\templates\admin\studenttest\users_per_test.html:6
+msgid "Home"
+msgstr ""
+
+#: .\templates\base.html:9 .\templates\base.html:14
+msgid "Corso C++ Quiz"
+msgstr "Quiz du cours C++"
+
+#: .\templates\base.html:22
+#, python-format
+msgid "Ciao, %(firstname)s %(lastname)s"
+msgstr "Bonjour, %(firstname)s %(lastname)s"
+
+#: .\templates\base.html:26
+msgid "Amministrazione"
+msgstr "Administration"
+
+#: .\templates\base.html:32
+msgid "Esci"
+msgstr "Déconnexion"
+
+#: .\templates\base.html:37
+msgid "Registrazione/Login"
+msgstr "Inscription/Connexion"
+
+#: .\templates\error.html:9
+msgid "Errore"
+msgstr "Erreur"
+
+#: .\templates\error.html:15
+msgid "Torna alla Home"
+msgstr "Retour à l'accueil"
+
+#: .\templates\exercise_list.html:9
+msgid "Punteggio totale"
+msgstr "Score total"
+
+#: .\templates\exercise_list.html:11
+msgid "Tabella"
+msgstr "Tableau"
+
+#: .\templates\exercise_list.html:14 .\templates\exercise_list.html:17
+msgid "Nessun filtro"
+msgstr "Pas de filtre"
+
+#: .\templates\exercise_list.html:27 .\templates\exercise_list.html:30
+msgid "Punteggio più basso"
+msgstr "Score le plus bas"
+
+#: .\templates\exercise_list.html:31
+msgid "Punteggio più alto"
+msgstr "Score le plus élevé"
+
+#: .\templates\exercise_list.html:55 .\templates\submit_exercise.html:11
+msgid "Punti"
+msgstr "Points"
+
+#: .\templates\exercise_list.html:68
+msgid "Titolo"
+msgstr "Titre"
+
+#: .\templates\exercise_list.html:69 .\templates\submit_exercise.html:9
+msgid "Tipologia"
+msgstr "Type d'exercices"
+
+#: .\templates\exercise_list.html:70
+msgid "Punteggio"
+msgstr "Points"
+
+#: .\templates\exercise_list.html:92
+msgid "Non ci sono esercizi."
+msgstr "Il n'existe pas d'exercices."
+
+#: .\templates\exercise_list.html:100 .\templates\submit_exercise.html:70
+msgid "Indietro"
+msgstr "Retour"
+
+#: .\templates\profile.html:19
+msgid "Profilo"
+msgstr "Profil"
+
+#: .\templates\profile.html:34
+msgid "Salva"
+msgstr "Sauver"
+
+#: .\templates\profile.html:41
+msgid "Cambio Password"
+msgstr "Modification du mot de passe"
+
+#: .\templates\register.html:11
+msgid "Registrazione"
+msgstr "Inscription"
+
+#: .\templates\register.html:23
+msgid "Registrati"
+msgstr "Registre"
+
+#: .\templates\register.html:27
+msgid "Login"
+msgstr ""
+
+#: .\templates\register.html:39
+msgid "Accedi"
+msgstr "Se connecter"
+
+#: .\templates\submit_exercise.html:17 .\templates\test_list.html:11
+msgid "Descrizione"
+msgstr "Description"
+
+#: .\templates\submit_exercise.html:21
+msgid "Risposta"
+msgstr "Réponse"
+
+#: .\templates\submit_exercise.html:42
+msgid "Scrivi qui il tuo esercizio"
+msgstr "Inscrivez votre exercice ici"
+
+#: .\templates\submit_exercise.html:47
+msgid "Incolla il tuo codice"
+msgstr "Collez votre code"
+
+#: .\templates\submit_exercise.html:50
+msgid "Scegli il file"
+msgstr "Choisir le fichier"
+
+#: .\templates\submit_exercise.html:61
+msgid "Mostra soluzione"
+msgstr "Montrer la solution"
+
+#: .\templates\submit_exercise.html:63
+msgid "Contrassegna"
+msgstr "Marque"
+
+#: .\templates\submit_exercise.html:65
+msgid "Rimuovi contrassegno"
+msgstr "Retirer le marqueur"
+
+#: .\templates\submit_exercise.html:68
+msgid "Invia Risposta"
+msgstr "Envoyer la réponse"
+
+#: .\templates\test_list.html:10
+msgid "Test"
+msgstr "Essais"
+
+#: .\templates\test_list.html:22
+msgid "Inizia Test"
+msgstr "Début du test"
+
+#: .\templates\test_list.html:24
+msgid "Mostra Esercizi"
+msgstr "Montrer les exercices"
+
+#: .\templates\test_list.html:32
+msgid "Non ci sono test attivi."
+msgstr "Il n'y a pas de tests actifs."

@@ -1,38 +1,58 @@
 <!-- base.html -->
 
 <!DOCTYPE html>
+{% load i18n %}
+{% load form_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Corso C++ Quiz{% endblock %}</title>
+    <title>{% block title %}{% translate "Corso C++ Quiz" %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Corso C++ Quiz</a>
+        <a class="navbar-brand" href="/{{ LANGUAGE_CODE }}">{% translate "Corso C++ Quiz" %}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}">Ciao, {{ user.first_name }} {{ user.last_name }}</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% translate "Lingua" %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="languageDropdown">
+                            <form action="{% url 'set_language' %}" method="post">
+                                {% csrf_token %}
+                                {% for code, name in languages %}
+                                    <button class="dropdown-item" type="submit" name="language" value="{{ code }}">{{ name }}</button>
+                                {% endfor %}
+                            </form>
+                        </div>
                     </li>
-                    {% if user.is_superuser %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                        </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link">Logout</button>
-                        </form>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% blocktrans with firstname=user.first_name lastname=user.last_name %}Ciao, {{ firstname }} {{ lastname }}{% endblocktrans %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="{% url 'profile' %}">{% translate "Profilo" %}</a>
+                            {% if user.is_superuser %}
+                                <a class="dropdown-item" href="{% url 'admin:index' %}">{% translate "Amministrazione" %}</a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">{% translate "Esci" %}</button>
+                            </form>
+                        </div>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Registrazione/Login</a>
+                        <a class="nav-link" href="{% url 'register' %}">{% translate "Registrazione/Login" %}</a>
                     </li>
                 {% endif %}
             </ul>

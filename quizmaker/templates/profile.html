@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% load form_tags %}
 {% block content %}
 <div class="container mt-5">
@@ -16,7 +16,7 @@
 
             <!-- Profile Update Form -->
             <div class="card mb-4">
-                <div class="card-header">Profile</div>
+                <div class="card-header">{% translate "Profilo" %}</div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
@@ -31,14 +31,14 @@
                             <span class="text-danger">{{ form.last_name.errors }}</span>
                         </div>
                         <input type="hidden" name="form_type" value="update_profile" />
-                        <button class="btn btn-primary" type="submit">Update</button>
+                        <button class="btn btn-primary" type="submit">{% translate "Salva" %}</button>
                     </form>
                 </div>
             </div>
 
             <!-- Password Change Form -->
             <div class="card">
-                <div class="card-header">Change Password</div>
+                <div class="card-header">{% translate "Cambio Password" %}</div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}

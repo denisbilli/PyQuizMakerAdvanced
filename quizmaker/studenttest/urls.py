@@ -2,10 +2,12 @@
 
 from django.contrib.auth.views import LogoutView
 from django.urls import path
+from django.urls import include, path
 from . import views
 
 urlpatterns = [
     path('', views.test_list, name='test_list'),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('tests/<int:test_id>/exercises/', views.exercise_list, name='exercise_list'),
     path('register/', views.register, name='register'),
     path('logout/', LogoutView.as_view(next_page='test_list'), name='logout'),
