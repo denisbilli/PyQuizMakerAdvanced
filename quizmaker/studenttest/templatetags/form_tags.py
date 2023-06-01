@@ -20,3 +20,8 @@ def add_class(value, arg):
 def replace(value, arg):
     old, new = arg
     return value.replace(old, new)
+
+
+@register.filter
+def to_int(value):
+    return int(value)

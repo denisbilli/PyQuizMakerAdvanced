@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load form_tags %}
 
 {% block content %}
 <div class="container">
@@ -59,11 +60,17 @@ int main() {
                 <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
                     {% if not exercise.test.is_graded %}
                         <button type="button" onclick="showSolution()" class="btn btn-info" id="btnShowSolution">{% translate "Mostra soluzione" %}</button>
-                        {% if not user_exercise.signed %}
-                            <button type="submit" class="btn btn-success" id="btnSignExercise">{% translate "Contrassegna" %}</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-danger" id="btnSignExercise">{% translate "Rimuovi contrassegno" %}</button>
-                        {% endif %}
+                        <input type="checkbox" name="signed" id="checkboxSignExercise" style="display: none;" {% if user_exercise.signed %}checked{% endif %}>
+                        <button onclick="flagExercise(this.form)" class="btn {% if not user_exercise.signed %}btn-success{% else %}btn-danger{% endif %}" id="btnSignExercise">{% if not user_exercise.signed %}{% translate "Contrassegna" %}{% else %}{% translate "Rimuovi contrassegno" %}{% endif %}</button>
+                        <div class="d-flex align-items-center">
+                            <span class="mr-3">{% translate "Ti è sembrato facile questo esercizio?" %}</span>
+                            <div class="star-rating">
+                                {% for star in "54321"|make_list %}
+                                    <input id="star{{ star }}" type="radio" name="rating" value="{{ star }}" {% if user_exercise.stars == star|to_int %}checked{% endif %} onchange="this.form.submit()">
+                                    <label for="star{{ star }}" title="{{ star }} stars">&#9733;</label>
+                                {% endfor %}
+                            </div>
+                        </div>
                     {% else %}
                         <button type="submit" class="btn btn-primary" id="btnSendAnswer">{% translate "Invia Risposta" %}</button>
                     {% endif %}
@@ -105,6 +112,27 @@ div.form-check {
     display: flex;
     align-items: center;
 }
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    width: 120px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: lightgray;
+    font-size: 30px;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.0.0/mermaid.min.js"></script>
 <script>
@@ -145,6 +173,12 @@ div.form-check {
         if(openAnswer != null) {
             openAnswer.fadeIn();
         }
+    }
+
+    function flagExercise($form) {
+        const flagCheckbox = document.getElementById("checkboxSignExercise");
+        flagCheckbox.checked = !flagCheckbox.checked;
+        $form.submit();
     }
 
     $(document).ready(function() {

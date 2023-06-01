@@ -44,6 +44,7 @@
               <a href="{% url 'submit_exercise' exercise.id %}">{{ exercise.title }}</a>
                 {% if request.user.is_superuser %}
                     <span class="badge badge-secondary">{{ exercise.signed_count }}</span>
+                    <span class="badge badge-info">{{ exercise.average_rating|default:'N/A'|floatformat:1 }}</span>
                 {% endif %}
                 {% if exercise.id in completed_exercises %}
                     <i class="fas fa-check"></i>

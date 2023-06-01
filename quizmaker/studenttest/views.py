@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Sum, Avg
 from django.core.files.storage import default_storage
 from django.db.models import Count, Q
 
@@ -117,7 +117,7 @@ def exercise_list(request, test_id):
                 (test.is_graded and test.due_date < now) or (not test.enabled))
 
     if cannot_enter_view:
-        print("L'utente " + request.user.username + " non ha i permessi per accedere al test " + test.name)
+        print(f"L'utente {request.user.username} non ha i permessi per accedere al test {test.name}")
         print("Check test finale: " + str(test.is_graded))
         print("Check test abilitato: " + str(test.enabled))
         if test.due_date is not None:
@@ -128,7 +128,8 @@ def exercise_list(request, test_id):
         return redirect('test_list')
 
     exercises = Exercise.objects.filter(test=test, enabled=True).annotate(
-        signed_count=Count('userexercise', filter=Q(userexercise__signed=True))
+        signed_count=Count('userexercise', filter=Q(userexercise__signed=True)),
+        average_rating=Avg('userexercise__stars')  # Compute the average rating here
     )
     completed_exercises = Submission.objects.filter(user=request.user, exercise__in=exercises).values_list('exercise', flat=True)
 
@@ -179,7 +180,15 @@ def submit_exercise(request, exercise_id):
 
     if request.method == 'POST':
         if not test.is_graded:
-            user_exercise.signed = not user_exercise.signed
+            rating = request.POST.get('rating')
+            signed = request.POST.get('signed')
+            print(f'The exercise has been rated {rating} and is {signed}')
+            if rating is not None:
+                user_exercise.stars = rating
+            if signed is not None:
+                user_exercise.signed = True
+            else:
+                user_exercise.signed = False
             user_exercise.save()
             return redirect('exercise_list', test_id=exercise.test.id)
         else:
