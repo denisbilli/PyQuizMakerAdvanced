@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-31 16:57+0200\n"
+"POT-Creation-Date: 2023-06-01 14:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,196 +18,207 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\quizmaker\settings.py:137
+#: .\quizmaker\settings.py:138 .\quizmaker\settings_local.py:138
+#: .\quizmaker\settings_remote.py:141
 msgid "Italiano"
 msgstr ""
 
-#: .\quizmaker\settings.py:138
+#: .\quizmaker\settings.py:139 .\quizmaker\settings_local.py:139
+#: .\quizmaker\settings_remote.py:142
 msgid "English"
-msgstr ""
+msgstr "Inglés"
 
-#: .\quizmaker\settings.py:139
+#: .\quizmaker\settings.py:140 .\quizmaker\settings_local.py:140
+#: .\quizmaker\settings_remote.py:143
 msgid "French"
-msgstr ""
+msgstr "Francés"
 
-#: .\quizmaker\settings.py:140
+#: .\quizmaker\settings.py:141 .\quizmaker\settings_local.py:141
+#: .\quizmaker\settings_remote.py:144
 msgid "Spanish"
-msgstr ""
+msgstr "Español"
 
 #: .\quizmaker\urls.py:23
 msgid "admin/"
 msgstr ""
 
-#: .\studenttest\models.py:30 .\templates\exercise_list.html:18
+#: .\studenttest\models.py:31 .\templates\exercise_list.html:18
 msgid "Domanda aperta"
-msgstr ""
+msgstr "Pregunta abierta"
 
-#: .\studenttest\models.py:31 .\templates\exercise_list.html:19
+#: .\studenttest\models.py:32 .\templates\exercise_list.html:19
 msgid "Scelta multipla"
-msgstr ""
+msgstr "Selección múltiple"
 
-#: .\studenttest\models.py:32 .\templates\exercise_list.html:20
+#: .\studenttest\models.py:33 .\templates\exercise_list.html:20
 msgid "Codice"
-msgstr ""
+msgstr "Código"
 
-#: .\studenttest\models.py:33 .\templates\exercise_list.html:21
+#: .\studenttest\models.py:34 .\templates\exercise_list.html:21
 msgid "Diagramma di flusso"
-msgstr ""
+msgstr "Diagrama de flujo"
 
 #: .\templates\admin\studenttest\user_detail.html:6
 #: .\templates\admin\studenttest\users_per_test.html:6
 msgid "Home"
 msgstr ""
 
-#: .\templates\base.html:9 .\templates\base.html:14
+#: .\templates\base.html:11 .\templates\base.html:16
 msgid "Corso C++ Quiz"
-msgstr ""
+msgstr "Cuestionario del curso de C++"
 
-#: .\templates\base.html:22
-#, python-format
+#: .\templates\base.html:25
+msgid "Lingua"
+msgstr "Idioma"
+
+#: .\templates\base.html:39
 msgid "Ciao, %(firstname)s %(lastname)s"
-msgstr ""
+msgstr "Hola, %(firstname)s %(lastname)s"
 
-#: .\templates\base.html:26
+#: .\templates\base.html:42 .\templates\profile.html:19
+msgid "Profilo"
+msgstr "Perfil"
+
+#: .\templates\base.html:44
 msgid "Amministrazione"
-msgstr ""
+msgstr "Administración"
 
-#: .\templates\base.html:32
+#: .\templates\base.html:49
 msgid "Esci"
-msgstr ""
+msgstr "Salida"
 
-#: .\templates\base.html:37
+#: .\templates\base.html:55
 msgid "Registrazione/Login"
-msgstr ""
+msgstr "Registro/Inicio de sesión"
 
 #: .\templates\error.html:9
 msgid "Errore"
-msgstr ""
+msgstr "Error"
 
 #: .\templates\error.html:15
 msgid "Torna alla Home"
-msgstr ""
+msgstr "Volver al inicio"
 
 #: .\templates\exercise_list.html:9
 msgid "Punteggio totale"
-msgstr ""
+msgstr "Puntuación total"
 
 #: .\templates\exercise_list.html:11
 msgid "Tabella"
-msgstr ""
+msgstr "Cuadro"
 
 #: .\templates\exercise_list.html:14 .\templates\exercise_list.html:17
 msgid "Nessun filtro"
-msgstr ""
+msgstr "Sin filtro"
 
 #: .\templates\exercise_list.html:27 .\templates\exercise_list.html:30
 msgid "Punteggio più basso"
-msgstr ""
+msgstr "Puntuación más baja"
 
 #: .\templates\exercise_list.html:31
 msgid "Punteggio più alto"
-msgstr ""
+msgstr "Puntuación más alta"
 
-#: .\templates\exercise_list.html:55 .\templates\submit_exercise.html:11
+#: .\templates\exercise_list.html:56 .\templates\submit_exercise.html:12
 msgid "Punti"
-msgstr ""
+msgstr "Puntuación"
 
-#: .\templates\exercise_list.html:68
+#: .\templates\exercise_list.html:69
 msgid "Titolo"
-msgstr ""
+msgstr "Título"
 
-#: .\templates\exercise_list.html:69 .\templates\submit_exercise.html:9
+#: .\templates\exercise_list.html:70 .\templates\submit_exercise.html:10
 msgid "Tipologia"
-msgstr ""
+msgstr "Tipo"
 
-#: .\templates\exercise_list.html:70
+#: .\templates\exercise_list.html:71
 msgid "Punteggio"
-msgstr ""
+msgstr "Puntuación"
 
-#: .\templates\exercise_list.html:92
+#: .\templates\exercise_list.html:93
 msgid "Non ci sono esercizi."
-msgstr ""
+msgstr "No hay ejercicios."
 
-#: .\templates\exercise_list.html:100 .\templates\submit_exercise.html:70
+#: .\templates\exercise_list.html:101 .\templates\submit_exercise.html:77
 msgid "Indietro"
-msgstr ""
-
-#: .\templates\profile.html:19
-msgid "Profilo"
-msgstr ""
+msgstr "Volver"
 
 #: .\templates\profile.html:34
 msgid "Salva"
-msgstr ""
+msgstr "Guardar"
 
 #: .\templates\profile.html:41
 msgid "Cambio Password"
-msgstr ""
+msgstr "Cambiar contraseña"
 
 #: .\templates\register.html:11
 msgid "Registrazione"
-msgstr ""
+msgstr "Inscripción"
 
 #: .\templates\register.html:23
 msgid "Registrati"
-msgstr ""
+msgstr "Registrarse"
 
 #: .\templates\register.html:27
 msgid "Login"
-msgstr ""
+msgstr "Inicio de sesión"
 
 #: .\templates\register.html:39
 msgid "Accedi"
-msgstr ""
+msgstr "Entrar"
 
-#: .\templates\submit_exercise.html:17 .\templates\test_list.html:11
+#: .\templates\submit_exercise.html:18 .\templates\test_list.html:11
 msgid "Descrizione"
-msgstr ""
+msgstr "Descripción"
 
-#: .\templates\submit_exercise.html:21
+#: .\templates\submit_exercise.html:22
 msgid "Risposta"
-msgstr ""
+msgstr "Respuesta"
 
-#: .\templates\submit_exercise.html:42
+#: .\templates\submit_exercise.html:43
 msgid "Scrivi qui il tuo esercizio"
-msgstr ""
+msgstr "Escriba aquí su ejercicio"
 
-#: .\templates\submit_exercise.html:47
+#: .\templates\submit_exercise.html:48
 msgid "Incolla il tuo codice"
-msgstr ""
+msgstr "Pegue su código"
 
-#: .\templates\submit_exercise.html:50
+#: .\templates\submit_exercise.html:51
 msgid "Scegli il file"
-msgstr ""
+msgstr "Elegir archivo"
 
-#: .\templates\submit_exercise.html:61
+#: .\templates\submit_exercise.html:62
 msgid "Mostra soluzione"
-msgstr ""
+msgstr "Mostrar solución"
 
-#: .\templates\submit_exercise.html:63
+#: .\templates\submit_exercise.html:64
 msgid "Contrassegna"
-msgstr ""
+msgstr "Marca"
 
-#: .\templates\submit_exercise.html:65
+#: .\templates\submit_exercise.html:64
 msgid "Rimuovi contrassegno"
-msgstr ""
+msgstr "Eliminar marcador"
 
-#: .\templates\submit_exercise.html:68
+#: .\templates\submit_exercise.html:66
+msgid "Ti è sembrato facile questo esercizio?"
+msgstr "¿Te ha resultado fácil este ejercicio?"
+
+#: .\templates\submit_exercise.html:75
 msgid "Invia Risposta"
-msgstr ""
+msgstr "Enviar respuesta"
 
 #: .\templates\test_list.html:10
 msgid "Test"
-msgstr ""
+msgstr "Pruebas"
 
 #: .\templates\test_list.html:22
 msgid "Inizia Test"
-msgstr ""
+msgstr "Iniciar prueba"
 
 #: .\templates\test_list.html:24
 msgid "Mostra Esercizi"
-msgstr ""
+msgstr "Mostrar ejercicios"
 
 #: .\templates\test_list.html:32
 msgid "Non ci sono test attivi."
-msgstr ""
+msgstr "No hay pruebas activas."
