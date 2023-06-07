@@ -46,7 +46,7 @@ class TestAdmin(admin.ModelAdmin):
     list_filter = ['is_graded']
     search_fields = ['name', 'description']
     filter_horizontal = ('visible_to',)
-    inlines = [ExerciseInline]  # Add the inline to the admin
+    # inlines = [ExerciseInline]  # Add the inline to the admin
     actions = ['duplicate_test', ]
 
     def duplicate_test(self, request, queryset):
