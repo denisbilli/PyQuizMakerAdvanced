@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
+
+.navbar-brand {
+    display: flex !important;
+    align-items: center !important; /* Allinea verticalmente gli elementi */
+    justify-content: center !important; /* Allinea orizzontalmente gli elementi se necessario */
+}
+
+.navbar-brand img {
+    margin-right: 10px; /* Spazio tra il logo e il testo */
+}
+
+.logo-text {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700; /* Bold */
+    font-size: 2em;
+    margin-left: 10px; /* Margine tra l'immagine e il testo */
+}
+
+.navbar-course-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;  /* Regola la dimensione del font secondo le tue preferenze */
+    font-weight: bold; /* Rende il testo grassetto */
+}

@@ -1,9 +1,14 @@
 # forms.py
 
 from django import forms
-from .models import Submission
+from .models import *
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from django import forms
+
+
+class AssignTestsToCourseForm(forms.Form):
+    course = forms.ModelChoiceField(queryset=Course.objects.all())
 
 
 class SubmissionForm(forms.ModelForm):

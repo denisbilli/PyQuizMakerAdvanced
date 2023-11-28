@@ -3,17 +3,26 @@
 <!DOCTYPE html>
 {% load i18n %}
 {% load form_tags %}
+{% load static %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% translate "Corso C++ Quiz" %}{% endblock %}</title>
+    <title>{% block title %}{% translate "QuestEd" %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/{{ LANGUAGE_CODE }}">{% translate "Corso C++ Quiz" %}</a>
+        <a class="navbar-brand" href="/{{ LANGUAGE_CODE }}">
+            <img src="{% static 'QuestEd_logo.svg' %}" alt="Logo" width="70" height="70">
+            <span class="logo-text">{% translate "QuestEd" %}</span>
+        </a>
+        <!-- Titolo del Corso al Centro -->
+        <div class="mx-auto">
+            {% block course_title %}{% endblock %}
+        </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -40,7 +49,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="{% url 'profile' %}">{% translate "Profilo" %}</a>
-                            {% if user.is_superuser %}
+                            {% if user.is_superuser or user.is_staff %}
                                 <a class="dropdown-item" href="{% url 'admin:index' %}">{% translate "Amministrazione" %}</a>
                             {% endif %}
                             <div class="dropdown-divider"></div>

@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+<div class="admin-form">
+    <h1>Assign Tests to Course</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% for obj in queryset %}
+            <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+        {% endfor %}
+        <div>
+            <label for="id_course">Select Course:</label>
+            {{ form.course }}
+        </div>
+        <div>
+            <input type="hidden" name="action" value="assign_tests_to_course" />
+            <input type="submit" name="apply" value="Assign Course">
+        </div>
+    </form>
+    <br />
+    <h2>Selected Tests</h2>
+    <ul>
+        {% for test in queryset %}
+            <li>{{ test.name }}</li>
+        {% empty %}
+            <li>No tests selected.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
