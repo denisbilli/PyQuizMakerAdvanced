@@ -3,6 +3,7 @@
 *.pot
 *.pyc
 __pycache__
+__pycache__/*
 db.sqlite3
 media
 
@@ -139,3 +140,5 @@ GitHub.sublime-settings
 
 # Configurazione Django
 settings.py
+log.txt
+nohup.out
