@@ -2,44 +2,112 @@
 
 {% extends 'base.html' %}
 {% load form_tags %}
+{% load static %}
 {% load i18n %}
 {% block content %}
-<div class="container-fluid bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>{% translate "Registrazione" %}</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    {% for field in register_form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field|add_class:"form-control" }}
-                            {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                    <button class="btn btn-primary" type="submit" name="register">{% translate "Registrati" %}</button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <h2>{% translate "Login" %}</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    {% for field in login_form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field|add_class:"form-control" }}
-                            {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                    <button class="btn btn-primary" type="submit" name="login">{% translate "Accedi" %}</button>
-                </form>
-            </div>
+<div class="main-container container-fluid h-100">
+    <!-- Image container with 60% width -->
+    <div class="col-md-7 h-100">
+        <img src="{% static 'welcome_screen.jpg' %}" alt="Welcome" class="img-fluid h-100">
+    </div>
+
+    <!-- Form container with 40% width -->
+    <div class="login-register-container col-md-5 h-100">
+        <!-- Tab structure for Registration and Login -->
+        <div class="tab">
+            <button class="tablinks btn btn-primary" onclick="openForm(event, 'Login')">Login</button>
+            <button class="tablinks btn btn-secondary" onclick="openForm(event, 'Register')">Registrazione</button>
+        </div>
+
+        <div id="Login" class="tabcontent" style="display:block;">
+            <h2>{% translate "Login" %}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in login_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit" name="login">{% translate "Accedi" %}</button>
+            </form>
+        </div>
+
+        <div id="Register" class="tabcontent">
+            <h2>{% translate "Registrazione" %}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in register_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit" name="register">{% translate "Registrati" %}</button>
+            </form>
         </div>
     </div>
 </div>
+{% endblock %}
+{% block custom_css %}
+<style>
+.main-container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-register-container {
+    background: #ececec;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.tab {
+    margin-bottom: 20px;
+}
+
+.image-container {
+    flex: 1;
+    /* Additional styles for the image can be added here */
+}
+
+.form-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.tabcontent {
+    display: none;
+}
+
+/* Additional styles for tabs and forms */
+</style>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function openForm(evt, formName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(formName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+</script>
 {% endblock %}
