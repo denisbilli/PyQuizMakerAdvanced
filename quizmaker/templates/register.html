@@ -15,12 +15,11 @@
     <div class="login-register-container col-md-5 h-100">
         <!-- Tab structure for Registration and Login -->
         <div class="tab">
-            <button class="tablinks btn btn-primary" onclick="openForm(event, 'Login')">Login</button>
-            <button class="tablinks btn btn-secondary" onclick="openForm(event, 'Register')">Registrazione</button>
+            <button class="tablinks btn btn-primary active" onclick="openForm(event, 'Login')">{% translate "Login" %}</button>
+            <button class="tablinks btn btn-secondary" onclick="openForm(event, 'Register')">{% translate "Registrazione" %}</button>
         </div>
 
         <div id="Login" class="tabcontent" style="display:block;">
-            <h2>{% translate "Login" %}</h2>
             <form method="post">
                 {% csrf_token %}
                 {% for field in login_form %}
@@ -37,7 +36,6 @@
         </div>
 
         <div id="Register" class="tabcontent">
-            <h2>{% translate "Registrazione" %}</h2>
             <form method="post">
                 {% csrf_token %}
                 {% for field in register_form %}
@@ -67,13 +65,39 @@
 }
 
 .login-register-container {
-    background: #ececec;
-    padding: 20px;
+    background: #f6f6f6;
+    padding: 0 !important;
     border-radius: 10px;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    overflow: hidden; /* Nasconde i bordi delle linguette non attive */
+
 }
 
 .tab {
-    margin-bottom: 20px;
+    display: flex;
+}
+
+.tablinks {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    margin: 0;
+    border-radius: 10px 10px 0 0; /* Arrotonda solo i bordi superiori */
+    background-color: #f0f0f0; /* Sfondo chiaro per le linguette */
+    color: black; /* Colore del testo */
+    transition: background-color 0.3s, color 0.3s; /* Transizione per hover */
+}
+
+.tablinks:hover {
+    background-color: #e0e0e0; /* Sfondo più scuro al passaggio del mouse */
+    color: white; /* Colore del testo al passaggio del mouse */
+}
+
+.tablinks.active {
+    background-color: white; /* Sfondo bianco per la linguetta attiva */
+    color: black; /* Colore del testo per la linguetta attiva */
+    border-bottom: 1px solid white; /* Nasconde il bordo inferiore per fondersi con il contenitore */
 }
 
 .image-container {
@@ -88,6 +112,7 @@
 
 .tabcontent {
     display: none;
+    padding: 20px;
 }
 
 /* Additional styles for tabs and forms */
@@ -99,15 +124,51 @@
 function openForm(evt, formName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
+    var currentVisible;
     for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
+        if (tabcontent[i].style.display !== 'none') {
+            currentVisible = tabcontent[i];
+        }
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(formName).style.display = "block";
+    var newVisible = document.getElementById(formName);
+    animateChange(currentVisible, newVisible);
     evt.currentTarget.className += " active";
 }
+
+function animateChange(oldElement, newElement) {
+    if (oldElement) {
+        var newHeight = newElement.scrollHeight + 'px';
+        oldElement.style.height = newHeight;
+        oldElement.style.opacity = '0';
+    }
+    setTimeout(function() {
+        if (oldElement) {
+            oldElement.style.display = 'none';
+        }
+        newElement.style.display = 'block';
+        newElement.style.height = newElement.scrollHeight + 'px';
+        newElement.style.opacity = '1';
+    }, 100); // Delay equal to the transition duration
+}
+
+// Initial CSS for animations
+document.addEventListener("DOMContentLoaded", function() {
+    var tabcontents = document.getElementsByClassName("tabcontent");
+    for (var i = 0; i < tabcontents.length; i++) {
+        tabcontents[i].style.transition = 'height 0.5s, opacity 0.5s';
+        tabcontents[i].style.overflow = 'hidden';
+        if (tabcontents[i].id !== 'Login') {
+            tabcontents[i].style.display = 'none';
+            tabcontents[i].style.height = '0';
+            tabcontents[i].style.opacity = '0';
+        }
+    }
+});
 </script>
+
+
 {% endblock %}
