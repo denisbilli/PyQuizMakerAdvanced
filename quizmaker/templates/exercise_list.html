@@ -1,6 +1,7 @@
 <!-- exercise_list.html -->
 {% extends 'base.html' %}
 {% load i18n %}
+
 {% block content %}
   <div class="d-flex justify-content-between">
     <h2>{{ test.name }}</h2>
@@ -98,7 +99,7 @@
   </div>
 
   <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
-    <button type="button" onclick="location.href='{% url 'test_list' %}'" class="btn btn-secondary">{% translate "Indietro" %}</button>
+    <button type="button" onclick="location.href='{% url 'test_list_by_course' course_id=test.course.id %}'" class="btn btn-secondary">{% translate "Indietro" %}</button>
   </div>
 {% endblock %}
 

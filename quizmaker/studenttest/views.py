@@ -97,6 +97,28 @@ def profile(request):
 
 
 @login_required
+def course_list(request):
+    # visible to everyone (visible_to is empty) or visible to the current user.
+    courses = Course.objects.filter(
+        Q(visible_to__isnull=True) | Q(visible_to=request.user),
+        enabled=True,
+    )
+    return render(request, 'course_list.html', {'courses': courses, 'user': request.user})
+
+
+@login_required
+def enroll_in_course(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+
+    # Controlla se l'utente ha già effettuato l'iscrizione
+    if not course.is_student_enrolled(request.user):
+        Enrollment.objects.create(student=request.user, course=course)
+
+    # Reindirizza l'utente alla lista dei test per il corso
+    return redirect('test_list_by_course', course_id=course_id)
+
+
+@login_required
 def test_list(request):
     # Show only the tests that are either
     # visible to everyone (visible_to is empty) or visible to the current user.
@@ -105,6 +127,36 @@ def test_list(request):
         enabled=True,
     )
     return render(request, 'test_list.html', {'tests': tests})
+
+
+@login_required
+def test_list_by_course(request, course_id):
+    # Recupera il corso specificato o restituisce una pagina 404 se non trovato
+    course = get_object_or_404(Course, pk=course_id)
+
+    cannot_enter_view = not request.user.is_superuser and (
+                (course.enabled and not course.is_student_enrolled(request.user)) or (not course.enabled))
+
+    print(f"{request.user} can view the course {course_id}? {not cannot_enter_view} because: \n"
+          f"- is {request.user} superuser? {request.user.is_superuser}\n"
+          f"- is course {course.name} enabled? {course.enabled}\n"
+          f"- is student {request.user} enrolled in course {course.name}? {course.is_student_enrolled(request.user)}\n")
+
+    if cannot_enter_view:
+        back_url = request.META.get('HTTP_REFERER',
+                                    '/')  # Ottieni l'URL del chiamante, default alla home se non presente
+        return render(request, 'error.html', {
+            'message': f'Spiacente! Non hai i permessi per accedere al corso {course.name}',
+            'back_url': back_url
+        })
+
+    # Filtra i test associati a quel corso specifico
+    tests = Test.objects.filter(course=course)
+
+    # Puoi aggiungere ulteriore logica qui, ad esempio controllare permessi specifici
+
+    # Restituisce i test al template
+    return render(request, 'test_list.html', {'course': course, 'tests': tests})
 
 
 @login_required
@@ -125,7 +177,8 @@ def exercise_list(request, test_id):
                   str(now.strftime("%d/%m/%Y %H:%M")))
         else:
             print("Check data: Nessuna data impostata")
-        return redirect('test_list')
+        return render(request, 'error.html', {'message': f'Spiacente! Non hai i permessi per '
+                                                         f'accedere al test {test.name}'})
 
     exercises = Exercise.objects.filter(test=test, enabled=True).annotate(
         signed_count=Count('userexercise', filter=Q(userexercise__signed=True)),
@@ -356,13 +409,13 @@ def register(request):
             if register_form.is_valid():
                 user = register_form.save()
                 login(request, user)
-                return redirect('test_list')
+                return redirect('course_list')
         elif 'login' in request.POST:  # This will be true if the user is trying to log in
             login_form = LoginForm(request.POST)
             if login_form.is_valid():
                 user = authenticate(request, username=login_form.cleaned_data.get('username'), password=login_form.cleaned_data.get('password'))
                 if user is not None:
                     login(request, user)
-                    return redirect('test_list')
+                    return redirect('course_list')
 
     return render(request, 'register.html', {'register_form': register_form, 'login_form': login_form})

@@ -1,0 +1,36 @@
+<!-- course_list.html -->
+{% extends 'base.html' %}
+{% load i18n %}
+{% load course_filters %}
+
+{% block content %}
+{% if courses %}
+  <table class="table mt-5">
+    <thead>
+      <tr>
+        <th scope="col" style="width: 30%;">{% translate "Corso" %}</th>
+        <th scope="col">{% translate "Descrizione" %}</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Assumi che 'user' sia l'utente attualmente autenticato passato alla vista -->
+      {% for course in courses %}
+          <tr>
+              <td class="align-middle">{{ course.name }}</td>
+              <td class="align-middle">{{ course.description }}</td>
+              <td class="align-middle">
+                  {% if course|is_student_enrolled:user %}
+                      <a href="{% url 'test_list_by_course' course.id %}" class="btn btn-primary">{% translate "Entra" %}</a>
+                  {% elif course.enabled %}
+                      <a href="{% url 'enroll_in_course' course.id %}" class="btn btn-secondary">{% translate "Iscriviti" %}</a>
+                  {% endif %}
+              </td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>{% translate "Nessun corso disponibile." %}</p>
+{% endif %}
+{% endblock %}

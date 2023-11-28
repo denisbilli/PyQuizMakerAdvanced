@@ -2,6 +2,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block course_title %}
+  <span class="navbar-course-title">{{ course.name }}</span>
+{% endblock %}
+
 {% block content %}
 {% if tests %}
   <table class="table mt-5">
@@ -28,6 +32,9 @@
       {% endfor %}
     </tbody>
   </table>
+  <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
+    <button type="button" onclick="location.href='{% url 'course_list' %}'" class="btn btn-secondary">{% translate "Indietro" %}</button>
+  </div>
 {% else %}
   <p class="mt-5">{% translate "Non ci sono test attivi." %}</p>
 {% endif %}
