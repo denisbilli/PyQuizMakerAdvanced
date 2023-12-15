@@ -97,10 +97,10 @@
           </tbody>
       </table>
   </div>
+{% endblock %}
 
-  <div class="fixed-bottom d-flex justify-content-between p-3 bg-light">
+{% block footer %}
     <button type="button" onclick="location.href='{% url 'test_list_by_course' course_id=test.course.id %}'" class="btn btn-secondary">{% translate "Indietro" %}</button>
-  </div>
 {% endblock %}
 
 {% block custom_css %}

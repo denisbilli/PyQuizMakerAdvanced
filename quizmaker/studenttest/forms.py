@@ -38,25 +38,17 @@ class SubmissionForm(forms.ModelForm):
 class RegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
+    username = forms.CharField(max_length=30)  # Aggiungi questo campo
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'password1', 'password2', )
+        fields = ('first_name', 'last_name', 'username', 'password1', 'password2', )
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        first_name = self.cleaned_data['first_name']
-        last_name = self.cleaned_data['last_name']
-        username_base = f"{first_name[0].lower()}{last_name.lower()}"
-        username = username_base
-
-        # Check if the username already exists and if so, add a number to the end
-        counter = 1
-        while User.objects.filter(username=username).exists():
-            username = f"{username_base}{counter}"
-            counter += 1
-
-        user.username = username
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.username = self.cleaned_data['username']
 
         if commit:
             user.save()

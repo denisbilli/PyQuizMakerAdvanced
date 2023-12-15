@@ -1,5 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 
+
+body {
+
+}
+
+.container {
+}
+
+.container.with-fixed-footer {
+    min-height: 100vh;
+    margin-bottom: 100px;
+}
+
+textarea, .codearea {
+    width: 100%;
+    height: 70vh !important;
+}
+
+pre {
+  max-height: 60vh !important; /*workaround for Prism scrollbars*/
+}
+
 .navbar-brand {
     display: flex !important;
     align-items: center !important; /* Allinea verticalmente gli elementi */

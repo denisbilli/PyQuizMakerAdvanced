@@ -156,7 +156,7 @@ def test_list_by_course(request, course_id):
     # Puoi aggiungere ulteriore logica qui, ad esempio controllare permessi specifici
 
     # Restituisce i test al template
-    return render(request, 'test_list.html', {'course': course, 'tests': tests})
+    return render(request, 'test_list.html', {'course': course, 'tests': tests, 'has_footer': True })
 
 
 @login_required
@@ -197,7 +197,9 @@ def exercise_list(request, test_id):
         'exercises': exercises,
         'completed_exercises': completed_exercises,
         'signed_exercises': signed_exercises,
-        'total_score': total_score
+        'total_score': total_score,
+        'has_footer': True,
+        'fixed_footer': True
     })
 
 
@@ -279,8 +281,12 @@ def submit_exercise(request, exercise_id):
                                                              'abilitato.'})
         form = SubmissionForm(instance=submission)
 
-    return render(request, 'submit_exercise.html', {'exercise': exercise, 'form': form, 'submission': submission,
-                                                    'user_exercise': user_exercise})
+    return render(request, 'submit_exercise.html', {'exercise': exercise,
+                                                    'form': form,
+                                                    'submission': submission,
+                                                    'user_exercise': user_exercise,
+                                                    'has_footer': True,
+                                                    'fixed_footer': True })
 
 
 @login_required
